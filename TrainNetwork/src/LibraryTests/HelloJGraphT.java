@@ -37,7 +37,7 @@
  ** 27-Jul-2003 : Initial revision (BN);
  **
  */
-package FileImport;
+package LibraryTests;
 
 import java.io.File;
 import java.net.*;
@@ -157,7 +157,7 @@ public final class HelloJGraphT
     }
     
     private static DirectedGraph<Integer, DefaultEdge> createExampleGraph()
-    {
+    { 
     	DirectedGraph<Integer, DefaultEdge> g =
              new DefaultDirectedGraph<Integer, DefaultEdge>(DefaultEdge.class);
     	
