@@ -20,6 +20,22 @@ public class Block extends Section {
 		this.setbId(bId);
 		
 	}	
+
+	public Signal getSignalUp() {
+		return signalUp;
+	}
+
+	public void setSignalUp(Signal signalUp) {
+		this.signalUp = signalUp;
+	}
+	
+	public Signal getSignalDown() {
+		return signalDown;
+	}
+
+	public void setSignalDown(Signal signalDown) {
+		this.signalDown = signalDown;
+	}
 	public boolean isPlus() {
 		return plus;
 	}

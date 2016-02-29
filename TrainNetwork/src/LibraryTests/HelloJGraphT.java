@@ -74,14 +74,14 @@ public final class HelloJGraphT
     public static void main(String [] args)
     {
     	//import example
-        DirectedGraph<String, DefaultEdge> exampleGraph = createExampleGraph();
+        //DirectedGraph<String, DefaultEdge> exampleGraph = createExampleGraph();
     	
     	
     	
     	//example
-        DirectedGraph<Integer, DefaultEdge> exampleGraph = createExampleGraph();
+       // DirectedGraph<Integer, DefaultEdge> exampleGraph = createExampleGraph();
         
-        System.out.println(exampleGraph.toString());
+       // System.out.println(exampleGraph.toString());
     	
         UndirectedGraph<String, DefaultEdge> stringGraph = createStringGraph();
 

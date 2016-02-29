@@ -14,13 +14,13 @@ public class test {
 		Section b6 = new Block(8, 6);
 		
 		Signal s1 = new Signal(1, true);
-		Signal s2 = new Signal(1, true);
-		Signal s3 = new Signal(1, true);
+		Signal s2 = new Signal(1, false);
+		Signal s3 = new Signal(1, false);
 		Signal s4 = new Signal(1, true);
-		Signal s5 = new Signal(1, true);
+		Signal s5 = new Signal(1, false);
 		Signal s6 = new Signal(1, true);
 		Signal s7 = new Signal(1, true);
-		Signal s8 = new Signal(1, true);
+		Signal s8 = new Signal(1, false);
 
 		//Network
 		b1.addEdge(b2);
