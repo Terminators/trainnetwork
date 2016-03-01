@@ -2,6 +2,7 @@ package NetworkRepresentation;
 
 public class Signal {
 	int sigId;
+	boolean stop = false; 
 	boolean up;
 
 	public Signal(int sigId, boolean up) {
@@ -28,6 +29,23 @@ public class Signal {
 	
 	public void setDown() {
 		this.up = false;
+	}
+
+	public boolean isStop() {
+		return stop;
+	}
+
+	public void setStop() {
+		this.stop = true;
+	}
+	
+	public void setClear() {
+		this.stop = false;
+	}
+	
+	public String toString()
+	{
+		return "sign" + sigId; 
 	}
 
 }

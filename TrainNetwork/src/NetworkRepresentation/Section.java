@@ -39,5 +39,10 @@ public abstract class Section {
 	{
 		
 	}
+	
+	public String toString()
+	{
+		return "s" + sId;
+	}
 
 }

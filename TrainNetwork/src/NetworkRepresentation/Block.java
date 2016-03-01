@@ -10,15 +10,20 @@ public class Block extends Section {
 	Point closestPointUp;
 	Point closestPointDown;
 	
-	public Block(int sId, int bId, Signal signalUp, Signal signalDown) {
+	public Block(int sId, int bId, boolean plus, Signal signalUp, Signal signalDown) {
 		super(sId);
 		this.setbId(bId);
+		this.plus = plus;
+		this.signalUp = signalUp;
+		this.signalDown = signalDown;
+
 	}
 	
-	public Block(int sId, int bId) {
+	public Block(int sId, int bId, boolean plus) {
 		super(sId);
 		this.setbId(bId);
-		
+		this.plus = plus;
+
 	}	
 
 	public Signal getSignalUp() {
@@ -72,7 +77,7 @@ public class Block extends Section {
 		this.closestPointDown = closestPointDown;
 	}
 	
-	public void addSignals(Signal signalUp, Signal signalDown)
+	public void addSignals(Signal signalDown, Signal signalUp)
 	{
 		addSignalUp(signalUp);
 		addSignalDown(signalDown);
@@ -86,5 +91,16 @@ public class Block extends Section {
 	public void addSignalDown(Signal signalDown)
 	{
 		this.signalDown = signalDown;
+	}
+	
+	public String toString()
+	{
+		return "b" + bId;
+	}
+
+	public boolean hasOneNeighbour() {
+		if (this.getNeighList().size() == 1){return true;}
+		
+		else return false;
 	}
 }

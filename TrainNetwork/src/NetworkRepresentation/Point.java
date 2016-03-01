@@ -34,5 +34,35 @@ public class Point extends Section {
 	{
 		pointList.add(this);
 	}
+	
+	public boolean pointFacingUp()
+	{
+		int up = 0;
+		
+		for (int i=0; i < this.getNeighList().size(); i++)
+		{
+			if (this.getNeighList().get(i).getsId() > this.getsId())
+			{
+				up++;
+			}
+		}
+		
+		if (up == 2)
+		{
+			System.out.println("Up facing point");
+			return true;
+		}
+		
+		else 
+		{
+			System.out.println("Down facing point");
+			return false;
+		}
+	}
+	
+	public String toString()
+	{
+		return "p" + pId;
+	}
 
 }
