@@ -1,8 +1,11 @@
 package NetworkRepresentation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InvalidRouteException {
 		
 		Block b1 = new Block(1, 1, true);
 		Block b2 = new Block(2, 2, true);
@@ -21,6 +24,9 @@ public class test {
 		Signal s6 = new Signal(6, true);
 		Signal s7 = new Signal(7, true);
 		Signal s8 = new Signal(8, false);
+		
+		p1.setPair(p2);
+		p2.setPair(p1);
 
 		//Network
 		b1.addEdge(b2);
@@ -46,9 +52,16 @@ public class test {
 		b5.addSignalUp(s7);
 		b6.addSignalDown(s8);
 		
-		Route r1 = new Route(b6, b2);
-		r1.printRoute();
-
+		Route r1 = new Route(1, s1, s6);
+		Route r2 = new Route(2, s6, s7);
+		r2.printRoute();
+		
+		List<Route> j1 = new ArrayList<Route>();
+		j1.add(r1);
+		j1.add(r2);
+		
+		InterlockingTableGenerator t = new InterlockingTableGenerator(j1);
+		t.printTable();
 	}
 
 }

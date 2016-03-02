@@ -29,6 +29,10 @@
     	<id>conjars.org</id>
     	<url>http://conjars.org/repo</url>
 	</repository>
+    <repository>
+        <id>d-maven</id>
+        <url>http://d-maven.googlecode.com/svn/trunk/repo</url>
+    </repository>
   </repositories>
   <dependencies>
   	<dependency>
@@ -40,6 +44,11 @@
    		<groupId>dk.aaue.sna</groupId>
    		<artifactId>jgrapht-sna</artifactId>
    		<version>1.2</version>
+	</dependency>
+	<dependency>
+    	<groupId>dnl.utils</groupId>
+   		<artifactId>j-text-utils</artifactId>
+		<version>0.3.3</version>
 	</dependency>
   </dependencies>
 </project>

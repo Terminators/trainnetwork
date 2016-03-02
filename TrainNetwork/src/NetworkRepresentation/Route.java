@@ -5,49 +5,99 @@ import java.util.List;
 
 public class Route {
 	
-	boolean up = true;
-	List<Section> path = new ArrayList<Section>();
-	Signal source;
-	Signal dest;
+	private int rId;
+	private boolean up = true;
+	private List<Section> path = new ArrayList<Section>();
+	private Signal source;
+	private Signal dest;
+	private boolean hasPoint;
 
-	public Route(Block source, Block dest)
+	public Route(int rId, Signal source, Signal dest) throws InvalidRouteException
 	{
+		this.rId = rId;
+		
 		//if the answer is negative, the direction of the route is UP
-		if ((source.getsId() - dest.getsId()) > 0)
+		if ((source.getOwner().getbId() - dest.getOwner().getbId()) > 0)
 		{
 			up = false;
 		}
 		
-		if (up)
-		{
-			this.source = source.getSignalUp();
-			this.dest = dest.getSignalUp();
-		}
+		this.source = source;
+		this.dest = dest;
 		
-		else 
-		{
-			this.source = source.getSignalDown();
-			this.dest = dest.getSignalDown();	
-		}
+		populatePath(source.getOwner(), dest.getOwner());
 		
-		populatePath(source, dest);
-
+		validRoute();
 	}
 	
-	public void populatePath(Block source, Block dest)
+	
+	
+	public int getrId() {
+		return rId;
+	}
+
+
+
+	public void setrId(int rId) {
+		this.rId = rId;
+	}
+
+
+
+	public boolean isUp() {
+		return up;
+	}
+	
+	public List<Section> getPath() {
+		return path;
+	}
+
+
+
+	public void setPath(List<Section> path) {
+		this.path = path;
+	}
+
+
+
+	public Signal getSource() {
+		return source;
+	}
+
+
+
+	public void setSource(Signal source) {
+		this.source = source;
+	}
+
+
+
+	public Signal getDest() {
+		return dest;
+	}
+
+
+
+	public void setDest(Signal dest) {
+		this.dest = dest;
+	}
+
+
+
+	public void populatePath(Block sourceBlock, Block destBlock)
 	{
 		Section temp;
 		if (up)
 		{
-			if (source.hasOneNeighbour())
+			if (sourceBlock.hasOneNeighbour())
 			{
-				temp = source.getNeighList().get(0);
+				temp = sourceBlock.getNeighList().get(0);
 			}
-			else temp = source.getNeighList().get(1);
+			else temp = sourceBlock.getNeighList().get(1);
 
 			path.add(temp);
 			
-			while (temp!=dest)
+			while (temp!=destBlock)
 			{
 				if (temp instanceof Block)
 				{
@@ -57,9 +107,10 @@ public class Route {
 				
 				else if (temp instanceof Point)
 				{
+					hasPoint = true;
 					if (((Point)temp).pointFacingUp())
 					{
-						if (dest.isPlus())
+						if (destBlock.isPlus())
 						{
 							path.add(temp.getNeighList().get(2));
 							temp = temp.getNeighList().get(2);
@@ -85,10 +136,10 @@ public class Route {
 		
 		else
 		{
-			temp = source.getNeighList().get(0);
+			temp = sourceBlock.getNeighList().get(0);
 			path.add(temp);
 			
-			while (temp!=dest)
+			while (temp!=destBlock)
 			{
 				if (temp instanceof Block)
 				{
@@ -100,7 +151,7 @@ public class Route {
 				{
 					if (((Point)temp).pointFacingUp())
 					{
-						if (dest.isPlus())
+						if (destBlock.isPlus())
 						{
 							path.add(temp.getNeighList().get(0));
 							temp = temp.getNeighList().get(0);
@@ -125,6 +176,22 @@ public class Route {
 		
 	}
 	
+	public boolean hasPoint() {
+		return hasPoint;
+	}
+	
+	public Point getPoint()
+	{
+		for (Section section : this.path )
+		{
+			if (section instanceof Point)
+			{
+				return (Point) section;
+			}
+		}
+		return null;
+	}
+
 	public void printRoute()
 	{
 		System.out.print("(" + source + ", ");
@@ -137,4 +204,40 @@ public class Route {
 
 	}
 	
+	public String getPathString()
+	{
+		String pathString = "";
+		for (int i=0; i < path.size(); i++)
+		{
+			pathString = pathString + path.get(i) + ", ";
+		}
+		return pathString;
+	}
+	
+	public void validRoute() throws InvalidRouteException
+	{
+		int pointCounter = 0;
+		
+
+		for (Section section : this.path )
+		{
+			if (section instanceof Point)
+			{
+				pointCounter++;
+			}
+		}
+		
+		if (pointCounter > 1)
+		{
+			throw new InvalidRouteException("Routes can only pass through one point.");
+
+		}
+		
+		if (source.equals(dest))
+		{
+			throw new InvalidRouteException("Source and Destination signals cannot be equal.");
+		}
+
+	}
+
 }

@@ -86,11 +86,13 @@ public class Block extends Section {
 	public void addSignalUp(Signal signalUp)
 	{
 		this.signalUp = signalUp;
+		signalUp.setOwner(this);
 	}
 	
 	public void addSignalDown(Signal signalDown)
 	{
 		this.signalDown = signalDown;
+		signalDown.setOwner(this);
 	}
 	
 	public String toString()

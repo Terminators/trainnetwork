@@ -1,9 +1,11 @@
 package NetworkRepresentation;
 
 public class Signal {
-	int sigId;
-	boolean stop = false; 
-	boolean up;
+	private int sigId;
+	private boolean stop = false; 
+	private boolean up;
+	
+	private Block owner;
 
 	public Signal(int sigId, boolean up) {
 		this.sigId = sigId;
@@ -45,7 +47,15 @@ public class Signal {
 	
 	public String toString()
 	{
-		return "sign" + sigId; 
+		return "sig" + sigId; 
+	}
+
+	public Block getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Block owner) {
+		this.owner = owner;
 	}
 
 }
