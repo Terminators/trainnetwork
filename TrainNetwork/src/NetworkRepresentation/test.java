@@ -54,11 +54,24 @@ public class test {
 		
 		Route r1 = new Route(1, s1, s6);
 		Route r2 = new Route(2, s6, s7);
+		Route r3 = new Route(3, s8, s3);
+		Route r4 = new Route(4, s3, s2);
+		Route r5 = new Route(5, s1, s4);
+		Route r6 = new Route(6, s4, s7);
+		Route r7 = new Route(7, s8, s5);
+		Route r8 = new Route(8, s5, s2);
+
 		r2.printRoute();
 		
 		List<Route> j1 = new ArrayList<Route>();
 		j1.add(r1);
 		j1.add(r2);
+		j1.add(r3);
+		j1.add(r4);
+		j1.add(r5);
+		j1.add(r6);
+		j1.add(r7);
+		j1.add(r8);
 		
 		InterlockingTableGenerator t = new InterlockingTableGenerator(j1);
 		t.printTable();

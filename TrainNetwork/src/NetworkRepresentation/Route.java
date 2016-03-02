@@ -10,6 +10,7 @@ public class Route {
 	private List<Section> path = new ArrayList<Section>();
 	private Signal source;
 	private Signal dest;
+	//private Point point;
 	private boolean hasPoint;
 
 	public Route(int rId, Signal source, Signal dest) throws InvalidRouteException
@@ -87,6 +88,8 @@ public class Route {
 	public void populatePath(Block sourceBlock, Block destBlock)
 	{
 		Section temp;
+		
+		//UP
 		if (up)
 		{
 			if (sourceBlock.hasOneNeighbour())
@@ -134,6 +137,7 @@ public class Route {
 			
 		}
 		
+		//DOWN
 		else
 		{
 			temp = sourceBlock.getNeighList().get(0);
@@ -149,18 +153,20 @@ public class Route {
 				
 				else if (temp instanceof Point)
 				{
-					if (((Point)temp).pointFacingUp())
+					hasPoint = true;
+
+					if (!(((Point)temp).pointFacingUp()))
 					{
 						if (destBlock.isPlus())
 						{
-							path.add(temp.getNeighList().get(0));
-							temp = temp.getNeighList().get(0);
+							path.add(temp.getNeighList().get(1));
+							temp = temp.getNeighList().get(1);
 						}
 						
 						else 
 						{
-							path.add(temp.getNeighList().get(1));
-							temp = temp.getNeighList().get(1);
+							path.add(temp.getNeighList().get(0));
+							temp = temp.getNeighList().get(0);
 						}
 					}
 					
