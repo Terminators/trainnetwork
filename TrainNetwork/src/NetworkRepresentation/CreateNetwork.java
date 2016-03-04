@@ -1,6 +1,5 @@
 package NetworkRepresentation;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.HashMap;
 
 import fileReading.GMLReader;

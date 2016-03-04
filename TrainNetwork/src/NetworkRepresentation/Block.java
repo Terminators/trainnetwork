@@ -10,8 +10,8 @@ public class Block extends Section {
 
 	@NotNull private boolean plus;
 
-	@NotNull @Length(min=2,max=2) private String leftNeighbour;
-	private String rightNeighbour;
+	@Length(min=2,max=2) private String leftNeighbour;
+	@Length(min=2,max=2) private String rightNeighbour;
 
 	private Signal signalUp;
 	private Signal signalDown;

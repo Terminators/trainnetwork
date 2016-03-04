@@ -1,6 +1,7 @@
 package Routes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import NetworkRepresentation.Block;
@@ -8,19 +9,23 @@ import NetworkRepresentation.CreateNetwork;
 import NetworkRepresentation.Point;
 import NetworkRepresentation.Section;
 
-public class Route {
+public class Route {	
 	
+	private static final HashMap<String, Route> Routes = new HashMap<String, Route>();
+
+	private int destId;
 	private int rId;
 	private boolean up = true;
 	private List<Section> path = new ArrayList<Section>();
 	//private Point point;
 	private boolean hasPoint;
 	private int sourceId;
-	private int destId;
 
-	public Route(int rId, int sourceId, int destId) throws InvalidRouteException
-	{
+	
+	private Route(int rId, int sourceId, int destId) throws InvalidRouteException{
 		this.rId = rId;
+		this.sourceId = sourceId;
+		this.destId = destId; 
 		
 		//if the answer is negative, the direction of the route is UP
 		if ((sourceId - destId) > 0)
@@ -28,15 +33,23 @@ public class Route {
 			up = false;
 		}
 		
-		this.sourceId = sourceId;
-		this.destId = destId;
-				
-		populatePath(CreateNetwork.blockBySignal(sourceId), CreateNetwork.blockBySignal(destId));
-		
+		populatePath(CreateNetwork.blockBySignal(this.sourceId), CreateNetwork.blockBySignal(this.destId) );
 		validRoute();
+				
 	}
 	
-	
+	public static Route getInstance(int rId, int sourceId, int destId) throws InvalidRouteException{
+		final String key = "Route " + Integer.toString(rId);
+		
+		if(!Routes.containsKey(key)){
+			
+		Routes.put(key, new Route(rId, sourceId, destId));
+			
+			
+		}
+		
+		return Routes.get(key);
+	}
 	
 	public int getrId() {
 		return rId;
@@ -76,6 +89,17 @@ public class Route {
 		return destId;
 	}
 	
+	
+	public static HashMap<String, Route> getRoutes()
+	{
+		return Routes;
+	}
+
+	public boolean isHasPoint()
+	{
+		return hasPoint;
+	}
+
 	public Block getSourceOwner()
 	{
 		return CreateNetwork.blockBySignal(sourceId);
@@ -254,5 +278,4 @@ public class Route {
 		return "r" + rId;
 
 	}
-
 }

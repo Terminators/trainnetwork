@@ -2,35 +2,75 @@ package Interlocking;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import NetworkRepresentation.Block;
 import NetworkRepresentation.Section;
+import Routes.InputJourney;
+import Routes.InvalidRouteException;
 import Routes.Route;
 import dnl.utils.text.table.TextTable;
 
 public class InterlockingTableGenerator {
 	List<Route> journey = new ArrayList<Route>();
+	List<ArrayList<Route>> journeys = new ArrayList<ArrayList<Route>>();
 	TextTable tt;
 	
-	public InterlockingTableGenerator(List<Route> journey)
+	public InterlockingTableGenerator() throws InvalidRouteException
 	{
-		this.journey = journey;
-		createTable();
+		mergeTables();
 	}
 	
 	public void createTable()
 	{
-		String[] columnNames = {"ID", "Source", "Destination", "Points", "Signals", "Path", "Conflict"};
-		Object[][] data = new String[journey.size() + 1][];
 		
-		for (int i=0; i < journey.size(); i++)
+		String[] columnNames = {"ID", "Source", "Destination", "Points", "Signals", "Path", "Conflict"};
+		//Object[][] data = new Object[journeys.size()][1];
+		Object[][] data = new String[journeys.size() * 10][];
+		
+		int totalRouteCounter = 0;
+
+		for (int i=0; i < journeys.size(); i++)
 		{
 			
-			data[i] = generateSettings(journey.get(i));
-			
+			//data = new String[journeys.get(i).size()][];
+			if (totalRouteCounter < 3)
+			{
+				for (int journeyCounter=0; journeyCounter < journeys.get(i).size(); journeyCounter++)
+				{
+					ArrayList<Route> routeList = journeys.get(i);
+					data[totalRouteCounter]
+							= generateSettings(routeList.get(journeyCounter));
+					totalRouteCounter++;
+				}
+			}
 		}
-		
+
 		 tt =  new TextTable(columnNames, data);
+	}
+	
+	public void mergeTables() throws InvalidRouteException{
+		Scanner loop = new Scanner(System.in);
+		System.out.println("How many journeys do you wish to add?");
+		int count = loop.nextInt();
+		for (int i = 0; i<count; i++){
+			System.out.println("You are on journey " + (i+1));
+			createJourneys();	
+		}
+		createTable();
+	}
+	
+	public List<ArrayList<Route>> createJourneys() throws InvalidRouteException
+	{
+		
+		InputJourney journey = new InputJourney();
+		
+		journey.jMake();
+		this.journey = journey.getJourney();
+		journeys.add(journey.getJourney());
+		
+		return journeys;
+		
 	}
 	
 	public String[] generateSettings(Route r)

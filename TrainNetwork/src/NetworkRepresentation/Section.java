@@ -3,20 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Section {
-	private int sId;
 	private List<Section> neighList = new ArrayList<Section>();
-	
-	public Section()
-	{
-		
-	}
 
-	public int getsId() {
-		return sId;
-	}
-	public void setsId(int sId) {
-		this.sId = sId;
-	}
 	public List<Section> getNeighList() {
 		return neighList;
 	}
@@ -39,10 +27,4 @@ public abstract class Section {
 	{
 		
 	}
-	
-	public String toString()
-	{
-		return "s" + sId;
-	}
-
 }
