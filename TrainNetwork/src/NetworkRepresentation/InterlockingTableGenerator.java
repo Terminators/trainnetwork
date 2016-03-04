@@ -1,6 +1,5 @@
 package NetworkRepresentation;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,14 +34,14 @@ public class InterlockingTableGenerator {
 	{
 		String[] row = new String[7];
 		row[0] = "r" + Integer.toString(r.getrId());
-		row[1] = "s" + Integer.toString(r.getSource().getSigId());
-		row[2] = "s" + Integer.toString(r.getDest().getSigId());
+		row[1] = "s" + Integer.toString(r.getSourceId());
+		row[2] = "s" + Integer.toString(r.getDestId());
 		row[5] = r.getPathString();
 
 		
 		row[3] = pointSettings(r);
 		row[4] = signalSettings(r);
-		//row[6] = conflictString;
+		//row[6] = conflictSettings();
 
 		return row;
 	}
@@ -55,7 +54,7 @@ public class InterlockingTableGenerator {
 			//set the point's settings
 			if (r.getPoint().pointFacingRouteDirection(r))
 			{
-				if (r.getSource().getOwner().isPlus() && r.getDest().getOwner().isPlus())
+				if (r.getSourceOwner().isPlus() && r.getDestOwner().isPlus())
 				{
 					//The point is plus, its pair is minus
 					r.getPoint().setPlus();
@@ -76,7 +75,7 @@ public class InterlockingTableGenerator {
 			
 			else 
 			{
-				if (r.getSource().getOwner().isPlus() && r.getDest().getOwner().isPlus())
+				if (r.getSourceOwner().isPlus() && r.getDestOwner().isPlus())
 				{
 					//The point is plus
 					r.getPoint().setPlus();
@@ -88,6 +87,7 @@ public class InterlockingTableGenerator {
 					//The point is minus
 					r.getPoint().setMinus();
 					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":m  ";
+					
 				}
 			}
 		}
@@ -133,52 +133,148 @@ public class InterlockingTableGenerator {
 					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(1)).getSignalUp().getSigId()) + " ";
 				}
 			}
-			
-			//Path Signals
-			if (r.isUp())
-			{
-				for (Section section : r.getPath() )
-				{
-					if (section instanceof Block)
-					{
-						if(r.getDest().getOwner().getSignalDown() != null)
-						{
-							((Block) section).getSignalDown().setDown();
-							signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalDown().getSigId()) + " ";
+		
+		}
 
-						}
-						
-						else 
+		
+		
+		//Path Signals
+		if (r.isUp())
+		{
+			for (Section section : r.getPath() )
+			{
+				if (section instanceof Block)
+				{
+					if(r.getDestOwner().getSignalDown() != null)
+					{
+						((Block) section).getSignalDown().setDown();
+						signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalDown().getSigId()) + " ";
+
+					}
+					
+					else 
+					{
+						if (section.equals(r.getPath().get(r.getPath().size() - 1)))
 						{
-							if (section.equals(r.getPath().get(r.getPath().size() - 1)))
-							{
-								((Block) r.getDest().getOwner().getNeighList().get(1)).getSignalDown().setStop();
-								signalsString = signalsString + "s" + Integer.toString(((Block) r.getDest().getOwner().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
-							}
+							((Block) r.getDestOwner().getNeighList().get(1)).getSignalDown().setStop();
+							signalsString = signalsString + "s" + Integer.toString(((Block) r.getDestOwner().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
 						}
 					}
-				}	
-			}
+				}
+			}	
+		}
+		
+		else
+		{
+			for (Section section : r.getPath() )
+			{
+				if (section instanceof Block)
+				{
+					if(r.getDestOwner().getSignalUp() != null)
+					{
+						((Block) section).getSignalUp().setUp();
+						signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalUp().getSigId()) + " ";
+
+					}
+					
+					else 
+					{
+						if (section.equals(r.getPath().get(r.getPath().size() - 1)))
+						{
+							((Block) r.getDestOwner().getNeighList().get(0)).getSignalUp().setStop();
+							signalsString = signalsString + "s" + Integer.toString(((Block) r.getDestOwner().getNeighList().get(0)).getSignalUp().getSigId()) + " ";
+						}
+					}
+				}
+			}	
 		}
 
 		return signalsString;
 	}
 	
-	public String conflictSettings(Route r)
+	public String conflictSettings2(Route r)
 	{
 		String conflictString = " ";
-		int journeyCounter = 1; 
 		
-		for (Route route: journey)
-		{
-			//boolean  = false;
+		for (Section section: r.getPath())
+		{			
+			int routeCounter = 0;
 			
-			for(int i = journeyCounter; i < journey.size(); i++)
+			if (journey.get(routeCounter).equals(r))
 			{
-				//while()
+				if (routeCounter < journey.size() - 1)
+				{
+					break;
+				}
+				routeCounter++;
 			}
 			
-			journeyCounter++;	
+			for(int i = 0; i < journey.size(); i++)
+			{
+				boolean conflictFound = false;
+				
+				Route route2 = journey.get(routeCounter);
+				
+				int pathCounter = 0;
+				
+				//stop searching for conflict if found with another route's path
+				while(!conflictFound)
+				{
+					if (section.equals(route2.getPath().get(pathCounter)))
+					{
+						System.out.println("Conflict Found");
+						conflictFound = true;
+						conflictString = conflictString + "r" + Integer.toString(route2.getrId()) + " ";	
+
+					}
+
+					pathCounter++;
+				}
+				
+				routeCounter++;	
+
+			}
+			
+		}
+		
+		
+		return conflictString;
+	}
+	
+	public String conflictSettings()
+	{
+		String conflictString = " ";
+		int routeCounter = 1; 
+		
+		for (Route route1: journey)
+		{			
+			for(int i = routeCounter; i < journey.size(); i++)
+			{
+				boolean conflictFound = false;
+				
+				int pathCounter1 = 0;
+				Route route2 = journey.get(routeCounter);
+				
+				//stop searching for conflict if found with another route's path
+				while(!conflictFound)
+				{
+					for (int pathCounter2 = 0; pathCounter2 < route2.getPath().size(); pathCounter2++)
+					{
+						if (route1.getPath().get(pathCounter1).equals(route2.getPath().get(pathCounter2)))
+						{
+							conflictFound = true;
+							conflictString = conflictString + "r" + Integer.toString(route2.getrId()) + " ";
+							
+
+						}
+
+					}
+				}
+				
+				
+			}
+			
+			routeCounter++;	
 		}
 		
 		

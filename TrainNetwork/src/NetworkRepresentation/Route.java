@@ -8,25 +8,25 @@ public class Route {
 	private int rId;
 	private boolean up = true;
 	private List<Section> path = new ArrayList<Section>();
-	private Signal source;
-	private Signal dest;
 	//private Point point;
 	private boolean hasPoint;
+	private int sourceId;
+	private int destId;
 
-	public Route(int rId, Signal source, Signal dest) throws InvalidRouteException
+	public Route(int rId, int sourceId, int destId) throws InvalidRouteException
 	{
 		this.rId = rId;
 		
 		//if the answer is negative, the direction of the route is UP
-		if ((source.getOwner().getbId() - dest.getOwner().getbId()) > 0)
+		if ((sourceId - destId) > 0)
 		{
 			up = false;
 		}
 		
-		this.source = source;
-		this.dest = dest;
-		
-		populatePath(source.getOwner(), dest.getOwner());
+		this.sourceId = sourceId;
+		this.destId = destId;
+				
+		populatePath(CreateNetwork.blockBySignal(sourceId), CreateNetwork.blockBySignal(destId));
 		
 		validRoute();
 	}
@@ -58,32 +58,29 @@ public class Route {
 	public void setPath(List<Section> path) {
 		this.path = path;
 	}
+	
 
 
-
-	public Signal getSource() {
-		return source;
+	public int getSourceId() {
+		return sourceId;
 	}
 
 
 
-	public void setSource(Signal source) {
-		this.source = source;
+	public int getDestId() {
+		return destId;
+	}
+	
+	public Block getSourceOwner()
+	{
+		return CreateNetwork.blockBySignal(sourceId);
 	}
 
+	public Block getDestOwner()
+	{
+		return CreateNetwork.blockBySignal(destId);
 
-
-	public Signal getDest() {
-		return dest;
 	}
-
-
-
-	public void setDest(Signal dest) {
-		this.dest = dest;
-	}
-
-
 
 	public void populatePath(Block sourceBlock, Block destBlock)
 	{
@@ -200,13 +197,14 @@ public class Route {
 
 	public void printRoute()
 	{
-		System.out.print("(" + source + ", ");
+		System.out.print("(s" + sourceId + ", ");
 		for (int i=0; i < path.size(); i++)
 		{
 			System.out.print(path.get(i) + ", ");
 		}
 		
-		System.out.print(dest + ")");
+		System.out.print("s" + destId + ")");
+		System.out.println("");
 
 	}
 	
@@ -239,7 +237,7 @@ public class Route {
 
 		}
 		
-		if (source.equals(dest))
+		if (sourceId == destId)
 		{
 			throw new InvalidRouteException("Source and Destination signals cannot be equal.");
 		}

@@ -47,7 +47,7 @@ public class Signal {
 	
 	public String toString()
 	{
-		return "sig" + sigId; 
+		return "s" + sigId; 
 	}
 
 	public Block getOwner() {

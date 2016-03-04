@@ -6,11 +6,11 @@ public abstract class Section {
 	private int sId;
 	private List<Section> neighList = new ArrayList<Section>();
 	
-	public Section(int sId)
+	public Section()
 	{
-		this.sId = sId;
+		
 	}
-	
+
 	public int getsId() {
 		return sId;
 	}

@@ -1,25 +1,47 @@
 package NetworkRepresentation;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Point extends Section {
-	int pId;
-	boolean plus;
-	Point pair;
+	private int pId;
 	
-	public Point(int sId, int pId) {
-		super(sId);
-		this.setpId(pId);
-		
-//		if(pId > 0)
-//		{
-//			if ((pId % 2) == 0)
-//			{
-//				setPair(pair);
-//				
-//			}
-//		}
+	private String neighbour1;
+	private String neighbour2;
+	private String neighbour3;
+	
+	private boolean plus;
+	private Point pair;
+	
+	boolean facingUp;
+	
+	private static final HashMap<String, Point> Point = new HashMap<String, Point>();
+	
+	private Point(String pId, String neighbour1, String neighbour2, String neighbour3, Boolean plus){
+		super();
+		this.pId = Integer.parseInt(pId.substring(1).trim());
+		this.neighbour1 = neighbour1.trim();
+		this.neighbour2 = neighbour2.trim(); 
+		this.neighbour3 = neighbour3.trim();
+		this.plus=plus;
+		//this.facingUp = 
 	}
+	
+	public static Point getInstance(String pId, String neighbour1, String neighbour2, String neighbour3, Boolean plus){
+		final String key = pId; 
+		if(!Point.containsKey(key)){
+			Point.put(key, new Point(pId, neighbour1, neighbour2, neighbour3, plus));	
+			
+		}
+		return Point.get(key);
+		
+	}
+	
+	public String pointString() {
+		return "POINT:" + pId + " \n neighbour1: " + neighbour1 + " \n neighbour2: " + neighbour2 +  " \n neighbour3: "+ neighbour3+ "\n Plus: " + plus;
+
+	}
+	
 	public int getpId() {
 		return pId;
 	}
@@ -46,33 +68,48 @@ public class Point extends Section {
 	public void setPair(Point pair) {
 		this.pair = pair;
 	}
+	
+	public void setBothPairs(Point pair)
+	{
+		this.pair = pair;
+		pair.setPair(this);
+	}
+	
+	public String getNeighbour1() {
+		return neighbour1;
+	}
+
+	public String getNeighbour2() {
+		return neighbour2;
+	}
+
+	public String getNeighbour3() {
+		return neighbour3;
+	}
+
 	public void addToGlobalList(List<Point> pointList)
 	{
 		pointList.add(this);
 	}
 	
+//	public boolean pointFacingUp()
+//	{	
+//		
+//		return facingUp();
+//	}
+	
 	public boolean pointFacingUp()
-	{
-		int up = 0;
+	{	
+		Block tempBlockNeighbour = (Block) this.getNeighList().get(0);
 		
-		for (int i=0; i < this.getNeighList().size(); i++)
-		{
-			if (this.getNeighList().get(i).getsId() > this.getsId())
-			{
-				up++;
-			}
-		}
-		
-		if (up == 2)
+		if (tempBlockNeighbour.getSignalUp() == null)
 		{
 			return true;
 		}
 		
-		else 
-		{
-			return false;
-		}
+		return false;
 	}
+	
 	
 	public boolean pointPair(Point p2)
 	{

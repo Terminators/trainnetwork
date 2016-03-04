@@ -1,46 +1,71 @@
 package NetworkRepresentation;
 
+import java.util.HashMap;
+
 public class Block extends Section {
-	int bId;
-	boolean plus;
+	private int bId;
+	private boolean plus;
 	
-	Signal signalUp;
-	Signal signalDown;
+	private String leftNeighbour;
+	private String rightNeighbour;
 	
-	Point closestPointUp;
-	Point closestPointDown;
+	private Signal signalUp;
+	private Signal signalDown;
 	
-	public Block(int sId, int bId, boolean plus, Signal signalUp, Signal signalDown) {
-		super(sId);
-		this.setbId(bId);
+	private Point closestPointUp;
+	private Point closestPointDown;
+	
+	private static final HashMap<String, Block> Blocks = new HashMap<String, Block>();
+	
+	private Block(String bId, String leftNeighbour, String rightNeighbour, Boolean plus, String signalDown, String signalUp) {
+		super();
+		this.bId = Integer.parseInt(bId.substring(1).trim());
+		
+		this.leftNeighbour = leftNeighbour.trim();
+		this.rightNeighbour = rightNeighbour.trim();
+		
 		this.plus = plus;
-		this.signalUp = signalUp;
-		this.signalDown = signalDown;
+				
+		if (!signalUp.trim().equals("NA"))
+		{
+			this.signalUp = new Signal(Integer.parseInt(signalUp.substring(1).trim()), true);
+		}
+		else {this.signalUp = null;}
+
+		
+		if (!signalDown.trim().equals("NA"))
+		{
+			this.signalDown = new Signal(Integer.parseInt(signalDown.substring(1).trim()), false);
+		}
+		else {this.signalDown = null;}
 
 	}
-	
-	public Block(int sId, int bId, boolean plus) {
-		super(sId);
-		this.setbId(bId);
-		this.plus = plus;
 
-	}	
+	public static Block getInstance(String name, String leftNeighbour, String rightNeighbour,
+			Boolean plus, String signalOne, String signalTwo) {
+		final String key = name;
+		if (!Blocks.containsKey(key)) {
+			Blocks.put(key, new Block(name, leftNeighbour, rightNeighbour, plus, signalOne, signalTwo));
+
+		}
+		return Blocks.get(key);
+
+	}
+
+	//public String blockString() {
+		//return "BLOCK:" + bId + " \n leftNeighbour: " + leftNeighbour + " \n rightNeightbour: " + rightNeighbour + "\n Plus: " + plus + "\n signalUp: " + signalUp.toString() + "\n signalDown: "+ signalDown.toString();
+		//return "BLOCK:" + bId + " \n leftNeighbour: " + ifNull(leftNeighbour) + " \n rightNeightbour: " + ifNull(rightNeighbour) + "\n Plus: " + plus + "\n signalUp: " + ifNull(signalUp.toString()) + "\n signalDown: "+ ifNull(signalDown.toString());
+
+	//}
 
 	public Signal getSignalUp() {
 		return signalUp;
-	}
-
-	public void setSignalUp(Signal signalUp) {
-		this.signalUp = signalUp;
 	}
 	
 	public Signal getSignalDown() {
 		return signalDown;
 	}
 
-	public void setSignalDown(Signal signalDown) {
-		this.signalDown = signalDown;
-	}
 	public boolean isPlus() {
 		return plus;
 	}
@@ -94,15 +119,34 @@ public class Block extends Section {
 		this.signalDown = signalDown;
 		signalDown.setOwner(this);
 	}
-	
-	public String toString()
-	{
-		return "b" + bId;
-	}
 
 	public boolean hasOneNeighbour() {
 		if (this.getNeighList().size() == 1){return true;}
 		
 		else return false;
 	}
+	
+	public String getLeftNeighbour() {
+		return leftNeighbour;
+	}
+
+	public String getRightNeighbour() {
+		return rightNeighbour;
+	}
+
+	public String toString()
+	{
+		return "b" + bId;
+	}
+	
+	public String ifNull(String s)
+	{
+		if (s.equals("NA"))
+		{
+			return "NA";
+		}
+		
+		else return s;
+	}
+
 }
