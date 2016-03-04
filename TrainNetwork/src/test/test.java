@@ -38,7 +38,7 @@ public class test {
 		
 		
 
-//		List<Route> j1 = routes.getJourney();
+		List<Route> j1 = routes.getJourney();
 
 //		j1.add(r1);
 //		j1.add(r2);

@@ -2,8 +2,14 @@ package NetworkRepresentation;
 
 import java.util.HashMap;
 import java.util.List;
-
 import Routes.Route;
+
+/**
+ * 
+ * @author Jack Chandler, Ryan Crosby
+ * @project TrainNetwork
+ * @version 1
+ */
 
 public class Point extends Section {
 	private int pId;

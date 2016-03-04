@@ -11,7 +11,7 @@ import NetworkRepresentation.*;
 /**
  * 
  * @author Ryan Crosby
- * @project Group Work
+ * @project TrainNetwork
  * @version 1
  */
 public class GMLReader {

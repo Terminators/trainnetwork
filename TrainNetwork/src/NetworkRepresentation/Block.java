@@ -1,9 +1,15 @@
 package NetworkRepresentation;
 
 import java.util.HashMap;
-
 import net.sf.oval.constraint.Length;
 import net.sf.oval.constraint.NotNull;
+
+/**
+ * 
+ * @author Jack Chandler, Ryan Crosby
+ * @project TrainNetwork
+ * @version 1
+ */
 
 public class Block extends Section {
 	private int bId;

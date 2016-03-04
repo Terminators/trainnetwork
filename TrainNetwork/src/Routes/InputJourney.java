@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * 
+ * @author Ryan Crosby, Jack Chandler
+ * @project TrainNetwork
+ * @version 1
+ */
+
 public class InputJourney {
 
 	private int sId;

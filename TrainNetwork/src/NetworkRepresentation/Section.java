@@ -2,6 +2,13 @@ package NetworkRepresentation;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Jack Chandler0
+ * @project TrainNetwork
+ * @version 1
+ */
+
 public abstract class Section {
 	private List<Section> neighList = new ArrayList<Section>();
 
