@@ -21,10 +21,10 @@ public class Point extends Section {
 	
 	private Point(String pId, String neighbour1, String neighbour2, String neighbour3, Boolean plus){
 		super();
-		this.pId = Integer.parseInt(pId.substring(1).trim());
-		this.neighbour1 = neighbour1.trim();
-		this.neighbour2 = neighbour2.trim(); 
-		this.neighbour3 = neighbour3.trim();
+		this.pId = Integer.parseInt(pId.substring(1));
+		this.neighbour1 = neighbour1;
+		this.neighbour2 = neighbour2; 
+		this.neighbour3 = neighbour3;
 		this.plus=plus;
 	}
 	

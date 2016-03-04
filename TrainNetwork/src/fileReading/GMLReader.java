@@ -44,7 +44,7 @@ public class GMLReader {
 				String signalUp = input.readLine();
 				String signalDown = input.readLine();
 				
-				Block s = Block.getInstance(bId, left, right, up, signalUp, signalDown);
+				Block s = Block.getInstance(bId.trim(), left.trim(), right.trim(), up, signalUp.trim(), signalDown.trim());
 				
 				storeSection.add(s);
 				storeBlock.add(s);
@@ -62,7 +62,7 @@ public class GMLReader {
 				up = false;	
 				}
 								
-				Point p = Point.getInstance(pId, neighbour1, neighbour2, neighbour3, up);
+				Point p = Point.getInstance(pId.trim(), neighbour1.trim(), neighbour2.trim(), neighbour3.trim(), up);
 				
 				storeSection.add(p);
 				storePoint.add(p);

@@ -50,5 +50,10 @@
    		<artifactId>j-text-utils</artifactId>
 		<version>0.3.3</version>
 	</dependency>
+	<dependency>
+		<groupId>net.sf.oval</groupId>
+		<artifactId>oval</artifactId>
+		<version>1.31</version>
+	</dependency>
   </dependencies>
 </project>
