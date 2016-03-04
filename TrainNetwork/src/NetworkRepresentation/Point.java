@@ -3,6 +3,8 @@ package NetworkRepresentation;
 import java.util.HashMap;
 import java.util.List;
 
+import Routes.Route;
+
 public class Point extends Section {
 	private int pId;
 	
@@ -24,7 +26,6 @@ public class Point extends Section {
 		this.neighbour2 = neighbour2.trim(); 
 		this.neighbour3 = neighbour3.trim();
 		this.plus=plus;
-		//this.facingUp = 
 	}
 	
 	public static Point getInstance(String pId, String neighbour1, String neighbour2, String neighbour3, Boolean plus){
@@ -91,12 +92,6 @@ public class Point extends Section {
 	{
 		pointList.add(this);
 	}
-	
-//	public boolean pointFacingUp()
-//	{	
-//		
-//		return facingUp();
-//	}
 	
 	public boolean pointFacingUp()
 	{	

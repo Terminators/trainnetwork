@@ -137,18 +137,4 @@ public class CreateNetwork {
 				
 	}
 	
-//	public boolean pointFacingUp(GML Reader)
-//	{	
-//		
-//		if (CreateNetwork.blockLookup(reader, Integer.parseInt(this.getNeighbour1().substring(1))))
-//		
-//		if (Integer.parseInt(this.getNeighbour1().substring(1)) < Integer.parseInt(this.getNeighbour3().substring(1)))
-//		{
-//			return true;
-//		}
-//		
-//		return false;
-//	}
-//	
-	
 }

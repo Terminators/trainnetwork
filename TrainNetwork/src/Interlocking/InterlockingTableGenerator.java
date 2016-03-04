@@ -1,8 +1,11 @@
-package NetworkRepresentation;
+package Interlocking;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import NetworkRepresentation.Block;
+import NetworkRepresentation.Section;
+import Routes.Route;
 import dnl.utils.text.table.TextTable;
 
 public class InterlockingTableGenerator {
@@ -191,60 +194,7 @@ public class InterlockingTableGenerator {
 
 		return signalsString;
 	}
-	
-//	public String conflictSettings(Route r)
-//	{
-//		String conflictString = " ";
-//		
-//		//loop through every section in the path for the current route(current route decided in createTable method)
-//		for (Section section: r.getPath())
-//		{			
-//			int routeCounter = 0;			
-//			
-//			//then for each route in the total journey, excluding the current route 
-//			for(int i = 0; i < journey.size(); i++)
-//			{
-//				//excludes current route from being compared
-//				if (!journey.get(routeCounter).equals(r))
-//				{
-//					boolean conflictFound = false;
-//					
-//					Route compareRoute = journey.get(routeCounter);
-//						
-//					int pathCounter = 0;
-//						
-//					//loop through the compareRoute's path until conflict is found with the current section of the original route
-//					while(!conflictFound && pathCounter < compareRoute.getPath().size())
-//					{
-//						if (section.equals(compareRoute.getPath().get(pathCounter)))
-//							{
-//								System.out.println("Conflict Found");
-//								conflictFound = true;
-//								conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";	
-//
-//							}
-//
-//						pathCounter++;
-//					}
-//						
-//					routeCounter++;	
-//				}
-//					
-//				//if journey is the current route and not the last element, increment the routeCounter 
-//				else if (routeCounter < journey.get(routeCounter).getPath().size())
-//				{
-//					routeCounter++;		
-//					
-//				}
-//					
-//
-//				}
-//			}
-//			
-//		return conflictString;
-//			
-//	}
-//		
+
 	public String conflictSettings(Route r)
 	{
 		String conflictString = " ";
@@ -269,7 +219,6 @@ public class InterlockingTableGenerator {
 						
 						if (section.equals(compareRoute.getPath().get(pathCounter)))
 						{
-							System.out.println("Conflict Found");
 							conflictFound = true;
 							conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";	
 
@@ -289,14 +238,11 @@ public class InterlockingTableGenerator {
 				
 			}
 					
-
 		}
 		
 		return conflictString;
 
 	}
-	
-
 	
 	public void printTable()
 	{
