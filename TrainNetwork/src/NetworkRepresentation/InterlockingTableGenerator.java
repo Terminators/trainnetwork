@@ -41,7 +41,7 @@ public class InterlockingTableGenerator {
 		
 		row[3] = pointSettings(r);
 		row[4] = signalSettings(r);
-		//row[6] = conflictSettings();
+		row[6] = conflictSettings(r);
 
 		return row;
 	}
@@ -192,94 +192,111 @@ public class InterlockingTableGenerator {
 		return signalsString;
 	}
 	
-	public String conflictSettings2(Route r)
+//	public String conflictSettings(Route r)
+//	{
+//		String conflictString = " ";
+//		
+//		//loop through every section in the path for the current route(current route decided in createTable method)
+//		for (Section section: r.getPath())
+//		{			
+//			int routeCounter = 0;			
+//			
+//			//then for each route in the total journey, excluding the current route 
+//			for(int i = 0; i < journey.size(); i++)
+//			{
+//				//excludes current route from being compared
+//				if (!journey.get(routeCounter).equals(r))
+//				{
+//					boolean conflictFound = false;
+//					
+//					Route compareRoute = journey.get(routeCounter);
+//						
+//					int pathCounter = 0;
+//						
+//					//loop through the compareRoute's path until conflict is found with the current section of the original route
+//					while(!conflictFound && pathCounter < compareRoute.getPath().size())
+//					{
+//						if (section.equals(compareRoute.getPath().get(pathCounter)))
+//							{
+//								System.out.println("Conflict Found");
+//								conflictFound = true;
+//								conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";	
+//
+//							}
+//
+//						pathCounter++;
+//					}
+//						
+//					routeCounter++;	
+//				}
+//					
+//				//if journey is the current route and not the last element, increment the routeCounter 
+//				else if (routeCounter < journey.get(routeCounter).getPath().size())
+//				{
+//					routeCounter++;		
+//					
+//				}
+//					
+//
+//				}
+//			}
+//			
+//		return conflictString;
+//			
+//	}
+//		
+	public String conflictSettings(Route r)
 	{
 		String conflictString = " ";
 		
-		for (Section section: r.getPath())
-		{			
-			int routeCounter = 0;
+		//for each route in the total journey, excluding the current route 
+		for(int routeCounter = 0; routeCounter < journey.size(); routeCounter++)
+		{
 			
-			if (journey.get(routeCounter).equals(r))
-			{
-				if (routeCounter < journey.size() - 1)
-				{
-					break;
-				}
-				routeCounter++;
-			}
-			
-			for(int i = 0; i < journey.size(); i++)
+			//excludes current route from being compared
+			if (!journey.get(routeCounter).equals(r))
 			{
 				boolean conflictFound = false;
-				
-				Route route2 = journey.get(routeCounter);
-				
+				Route compareRoute = journey.get(routeCounter);
 				int pathCounter = 0;
 				
-				//stop searching for conflict if found with another route's path
-				while(!conflictFound)
+				//loop through the compareRoute's path until conflict is found with the current section of the original route
+				while(!conflictFound && pathCounter < compareRoute.getPath().size())
 				{
-					if (section.equals(route2.getPath().get(pathCounter)))
-					{
-						System.out.println("Conflict Found");
-						conflictFound = true;
-						conflictString = conflictString + "r" + Integer.toString(route2.getrId()) + " ";	
-
-					}
-
-					pathCounter++;
-				}
-				
-				routeCounter++;	
-
-			}
-			
-		}
-		
-		
-		return conflictString;
-	}
-	
-	public String conflictSettings()
-	{
-		String conflictString = " ";
-		int routeCounter = 1; 
-		
-		for (Route route1: journey)
-		{			
-			for(int i = routeCounter; i < journey.size(); i++)
-			{
-				boolean conflictFound = false;
-				
-				int pathCounter1 = 0;
-				Route route2 = journey.get(routeCounter);
-				
-				//stop searching for conflict if found with another route's path
-				while(!conflictFound)
-				{
-					for (int pathCounter2 = 0; pathCounter2 < route2.getPath().size(); pathCounter2++)
-					{
-						if (route1.getPath().get(pathCounter1).equals(route2.getPath().get(pathCounter2)))
+					//loop through every section in the path for the current route(current route decided in createTable method)
+					for (Section section: r.getPath())
+					{	
+						
+						if (section.equals(compareRoute.getPath().get(pathCounter)))
 						{
+							System.out.println("Conflict Found");
 							conflictFound = true;
-							conflictString = conflictString + "r" + Integer.toString(route2.getrId()) + " ";
-							
+							conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";	
 
 						}
-
 					}
+					
+					pathCounter++;
+	
 				}
 				
+			}
+				
+			//if journey is the current route and not the last element, increment the routeCounter 
+			else if (routeCounter < journey.get(routeCounter).getPath().size() - 1)
+			{
+				routeCounter++;		
 				
 			}
-			
-			routeCounter++;	
+					
+
 		}
 		
-		
 		return conflictString;
+
 	}
+	
+
 	
 	public void printTable()
 	{
@@ -287,153 +304,4 @@ public class InterlockingTableGenerator {
 		tt.printTable();
 	}
 
-	
-//	public String[] generateSettings(Route r)
-//	{
-//		String[] row = new String[7];
-//		row[0] = "r" + Integer.toString(r.getrId());
-//		row[1] = "s" + Integer.toString(r.getSource().getSigId());
-//		row[2] = "s" + Integer.toString(r.getDest().getSigId());
-//		String pointsString = "";
-//		String signalsString = " ";
-//		row[5] = r.getPathString();
-//		String conflictString = " ";
-//
-//		//If the route passes a point
-//		if (r.hasPoint())
-//		{
-//			//set the point's settings
-//			if (r.getPoint().pointFacingRouteDirection(r))
-//			{
-//				if (r.getSource().getOwner().isPlus() && r.getDest().getOwner().isPlus())
-//				{
-//					//The point is plus, its pair is minus
-//					r.getPoint().setPlus();
-//					r.getPoint().getPair().setMinus();
-//					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":p  ";
-//					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getPair().getpId()) + ":m  "; 
-//				}
-//				
-//				else
-//				{
-//					//The point is minus, its pair is plus
-//					r.getPoint().setMinus();
-//					r.getPoint().getPair().setPlus();
-//					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":m  ";
-//					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getPair().getpId()) + ":p  "; 
-//				}
-//			}
-//			
-//			else 
-//			{
-//				if (r.getSource().getOwner().isPlus() && r.getDest().getOwner().isPlus())
-//				{
-//					//The point is plus
-//					r.getPoint().setPlus();
-//					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":p  ";
-//				}
-//				
-//				else
-//				{
-//					//The point is minus
-//					r.getPoint().setMinus();
-//					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":m  ";
-//				}
-//			}
-//			
-//			//Then Flanking Signal (not needed if there are no points in route)
-//			if (r.getPoint().isPlus())
-//			{
-//				if (r.getPoint().pointFacingUp())
-//				{
-//					((Block)r.getPoint().getNeighList().get(1)).getSignalDown().setStop();
-//					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
-//				
-//				}
-//				
-//				else 
-//				{
-//					((Block)r.getPoint().getNeighList().get(0)).getSignalUp().setStop();
-//					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(0)).getSignalUp().getSigId()) + " ";
-//				}
-//			}
-//			
-//			else 
-//			{
-//				if (r.getPoint().pointFacingUp())
-//				{
-//					((Block)r.getPoint().getNeighList().get(2)).getSignalDown().setStop();
-//					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(2)).getSignalDown().getSigId()) + " ";
-//				
-//				}
-//				
-//				else 
-//				{
-//					((Block)r.getPoint().getNeighList().get(1)).getSignalUp().setStop();
-//					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(1)).getSignalUp().getSigId()) + " ";
-//				}
-//			}
-//			
-//			//Path Signals
-//			if (r.isUp())
-//			{
-//				for (Section section : r.getPath() )
-//				{
-//					if (section instanceof Block)
-//					{
-//						if(r.getDest().getOwner().getSignalDown() != null)
-//						{
-//							((Block) section).getSignalDown().setDown();
-//							signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalDown().getSigId()) + " ";
-//
-//						}
-//						
-//						else 
-//						{
-//							if (section.equals(r.getPath().get(r.getPath().size() - 1)))
-//							{
-//								((Block) r.getDest().getOwner().getNeighList().get(1)).getSignalDown().setStop();
-//								signalsString = signalsString + "s" + Integer.toString(((Block) r.getDest().getOwner().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
-//							}
-//						}
-//					}
-//				}	
-//			}
-//			
-//			else 
-//			{
-//				for (Section section : r.getPath() )
-//				{
-//					if (section instanceof Block)
-//					{
-//						if(r.getDest().getOwner().getSignalUp() != null)
-//						{
-//							((Block) section).getSignalUp().setDown();
-//							signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalUp().getSigId()) + " ";
-//						}
-//						
-//						else 
-//						{
-//							if (section.equals(r.getPath().get(r.getPath().size() - 1)))
-//							{
-//								((Block) r.getDest().getOwner().getNeighList().get(0)).getSignalUp().setStop();
-//								signalsString = signalsString + "s" + Integer.toString(((Block) r.getDest().getOwner().getNeighList().get(0)).getSignalUp().getSigId()) + " ";
-//							}
-//						}
-//
-//					}
-//				}	
-//			}
-//			
-//			//Conflict
-//			//if()
-//			
-//		}
-//		
-//		row[3] = pointsString;
-//		row[4] = signalsString;
-//		row[6] = conflictString;
-//
-//		return row;
-//	}
 }
