@@ -30,3 +30,4 @@ b2                <--- neighbour 1
 b3                <--- neighbour 2
 b4                <--- neighbour 3
 plus               <--- actually defines nothing... need to take it out
+s
