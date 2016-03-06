@@ -25,19 +25,18 @@ public class Point extends Section {
 	
 	private static final HashMap<String, Point> Point = new HashMap<String, Point>();
 	
-	private Point(String pId, String neighbour1, String neighbour2, String neighbour3, Boolean plus){
+	private Point(String pId, String neighbour1, String neighbour2, String neighbour3){
 		super();
 		this.pId = Integer.parseInt(pId.substring(1));
 		this.neighbour1 = neighbour1;
 		this.neighbour2 = neighbour2; 
 		this.neighbour3 = neighbour3;
-		this.plus=plus;
 	}
 	
-	public static Point getInstance(String pId, String neighbour1, String neighbour2, String neighbour3, Boolean plus){
+	public static Point getInstance(String pId, String neighbour1, String neighbour2, String neighbour3){
 		final String key = pId; 
 		if(!Point.containsKey(key)){
-			Point.put(key, new Point(pId, neighbour1, neighbour2, neighbour3, plus));	
+			Point.put(key, new Point(pId, neighbour1, neighbour2, neighbour3));	
 			
 		}
 		return Point.get(key);

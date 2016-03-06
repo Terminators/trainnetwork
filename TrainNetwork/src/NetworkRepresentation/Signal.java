@@ -25,14 +25,6 @@ public class Signal {
 		return up;
 	}
 
-	public void setUp() {
-		this.up = true;
-	}
-	
-	public void setDown() {
-		this.up = false;
-	}
-
 	public boolean isStop() {
 		return stop;
 	}
@@ -57,5 +49,7 @@ public class Signal {
 	public void setOwner(Block owner) {
 		this.owner = owner;
 	}
+
+
 
 }

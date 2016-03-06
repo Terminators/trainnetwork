@@ -1,6 +1,7 @@
 package Interlocking;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,64 +16,96 @@ public class InterlockingTableGenerator {
 	List<Route> journey = new ArrayList<Route>();
 	List<ArrayList<Route>> journeys = new ArrayList<ArrayList<Route>>();
 	TextTable tt;
-	
+
 	public InterlockingTableGenerator() throws InvalidRouteException
 	{
-		mergeTables();
+		createTable();
 	}
 	
-	public void createTable()
+	public InterlockingTableGenerator(List<Route> journey)
 	{
-		
+		this.journey = journey;
+		createTableNoInput();
+	}
+	
+	public void createTableNoInput()
+	{
 		String[] columnNames = {"ID", "Source", "Destination", "Points", "Signals", "Path", "Conflict"};
-		//Object[][] data = new Object[journeys.size()][1];
-		Object[][] data = new String[journeys.size() * 10][];
+		Object[][] data = new String[journey.size() + 1][];
 		
-		int totalRouteCounter = 0;
-
-		for (int i=0; i < journeys.size(); i++)
+		for (int i=0; i < journey.size(); i++)
 		{
 			
-			//data = new String[journeys.get(i).size()][];
+			data[i] = generateSettings(journey.get(i));
+			
+		}
+		
+		 tt =  new TextTable(columnNames, data);
+	}
+
+	public void addToTable()
+	{
+
+		String[] columnNames = { "ID", "Source", "Destination", "Points", "Signals", "Path", "Conflict" };
+		List<Object[]> dataList = new ArrayList<Object[]>();
+
+		int totalRouteCounter = 0;
+
+		for (int i = 0; i < journeys.size(); i++)
+		{
+
 			if (totalRouteCounter < 3)
 			{
-				for (int journeyCounter=0; journeyCounter < journeys.get(i).size(); journeyCounter++)
+				for (int journeyCounter = 0; journeyCounter < journeys.get(i).size(); journeyCounter++)
 				{
 					ArrayList<Route> routeList = journeys.get(i);
-					data[totalRouteCounter]
-							= generateSettings(routeList.get(journeyCounter));
+					dataList.add(generateSettings(routeList.get(journeyCounter)));
+
 					totalRouteCounter++;
 				}
 			}
 		}
 
-		 tt =  new TextTable(columnNames, data);
+		Object[][] data = new String[dataList.size()][];
+		data = dataList.toArray(data);
+
+		tt = new TextTable(columnNames, data);
 	}
-	
-	public void mergeTables() throws InvalidRouteException{
-		Scanner loop = new Scanner(System.in);
-		System.out.println("How many journeys do you wish to add?");
-		int count = loop.nextInt();
-		for (int i = 0; i<count; i++){
-			System.out.println("You are on journey " + (i+1));
-			createJourneys();	
+
+	public void createTable() throws InvalidRouteException
+	{
+		try
+		{
+			Scanner loop = new Scanner(System.in);
+			System.out.println("How many journeys do you wish to add?");
+			int count = loop.nextInt();
+			for (int i = 0; i < count; i++)
+			{
+				System.out.println("You are on journey " + (i + 1));
+				createJourneys();
+			}
+			addToTable();
+
 		}
-		createTable();
+		catch (InputMismatchException e1)
+		{
+			throw new InvalidRouteException("Must input a positive integer for number of journeys");
+		}
 	}
-	
+
 	public List<ArrayList<Route>> createJourneys() throws InvalidRouteException
 	{
-		
+
 		InputJourney journey = new InputJourney();
-		
+
 		journey.jMake();
 		this.journey = journey.getJourney();
 		journeys.add(journey.getJourney());
-		
+
 		return journeys;
-		
+
 	}
-	
+
 	public String[] generateSettings(Route r)
 	{
 		String[] row = new String[7];
@@ -81,155 +114,171 @@ public class InterlockingTableGenerator {
 		row[2] = "s" + Integer.toString(r.getDestId());
 		row[5] = r.getPathString();
 
-		
 		row[3] = pointSettings(r);
 		row[4] = signalSettings(r);
 		row[6] = conflictSettings(r);
 
 		return row;
 	}
-	
+
 	public String pointSettings(Route r)
 	{
 		String pointsString = "";
 		if (r.hasPoint())
 		{
-			//set the point's settings
+			// set the point's settings
 			if (r.getPoint().pointFacingRouteDirection(r))
 			{
 				if (r.getSourceOwner().isPlus() && r.getDestOwner().isPlus())
 				{
-					//The point is plus, its pair is minus
+					// The point is plus, its pair is minus
 					r.getPoint().setPlus();
-					r.getPoint().getPair().setMinus();
 					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":p  ";
-					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getPair().getpId()) + ":m  "; 
+					if (r.getPoint().getPair() != null)
+					{
+						r.getPoint().getPair().setMinus();
+						pointsString = pointsString + "p" + Integer.toString(r.getPoint().getPair().getpId()) + ":m  ";
+					}
 				}
-				
+
 				else
 				{
-					//The point is minus, its pair is plus
+					// The point is minus, its pair is plus
 					r.getPoint().setMinus();
-					r.getPoint().getPair().setPlus();
 					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":m  ";
-					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getPair().getpId()) + ":p  "; 
+
+					if (r.getPoint().getPair() != null)
+					{
+						r.getPoint().getPair().setPlus();
+						pointsString = pointsString + "p" + Integer.toString(r.getPoint().getPair().getpId()) + ":p  ";
+					}
+					
 				}
 			}
-			
-			else 
+
+			else
 			{
 				if (r.getSourceOwner().isPlus() && r.getDestOwner().isPlus())
 				{
-					//The point is plus
+					// The point is plus
 					r.getPoint().setPlus();
 					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":p  ";
 				}
-				
+
 				else
 				{
-					//The point is minus
+					// The point is minus
 					r.getPoint().setMinus();
 					pointsString = pointsString + "p" + Integer.toString(r.getPoint().getpId()) + ":m  ";
-					
+
 				}
 			}
 		}
 		return pointsString;
 	}
-	
+
 	public String signalSettings(Route r)
 	{
 		String signalsString = " ";
 
+		// Flanking Signal (not needed if there are no points in route)
 		if (r.hasPoint())
 		{
-			
-			//Then Flanking Signal (not needed if there are no points in route)
 			if (r.getPoint().isPlus())
 			{
 				if (r.getPoint().pointFacingUp())
 				{
-					((Block)r.getPoint().getNeighList().get(1)).getSignalDown().setStop();
-					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
-				
+					((Block) r.getPoint().getNeighList().get(1)).getSignalDown().setStop();
+					signalsString = signalsString + "s"
+							+ Integer.toString(((Block) r.getPoint().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
+
 				}
-				
-				else 
+
+				else
 				{
-					((Block)r.getPoint().getNeighList().get(0)).getSignalUp().setStop();
-					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(0)).getSignalUp().getSigId()) + " ";
+					((Block) r.getPoint().getNeighList().get(0)).getSignalUp().setStop();
+					signalsString = signalsString + "s"
+							+ Integer.toString(((Block) r.getPoint().getNeighList().get(0)).getSignalUp().getSigId()) + " ";
 				}
 			}
-			
-			else 
+
+			else
 			{
 				if (r.getPoint().pointFacingUp())
 				{
-					((Block)r.getPoint().getNeighList().get(2)).getSignalDown().setStop();
-					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(2)).getSignalDown().getSigId()) + " ";
-				
+					((Block) r.getPoint().getNeighList().get(2)).getSignalDown().setStop();
+					signalsString = signalsString + "s"
+							+ Integer.toString(((Block) r.getPoint().getNeighList().get(2)).getSignalDown().getSigId()) + " ";
+
 				}
-				
-				else 
+
+				else
 				{
-					((Block)r.getPoint().getNeighList().get(1)).getSignalUp().setStop();
-					signalsString = signalsString + "s" + Integer.toString(((Block)r.getPoint().getNeighList().get(1)).getSignalUp().getSigId()) + " ";
+					((Block) r.getPoint().getNeighList().get(1)).getSignalUp().setStop();
+					signalsString = signalsString + "s"
+							+ Integer.toString(((Block) r.getPoint().getNeighList().get(1)).getSignalUp().getSigId()) + " ";
 				}
 			}
-		
+
 		}
 
-		
-		
-		//Path Signals
+		// Path Signals
 		if (r.isUp())
 		{
-			for (Section section : r.getPath() )
+			//loop through all the sections in a route's path
+			for (Section section : r.getPath())
 			{
+				//if the current section in the path is a block
 				if (section instanceof Block)
 				{
-					if(r.getDestOwner().getSignalDown() != null)
-					{
-						((Block) section).getSignalDown().setDown();
+					//if the current block has a down signal
+					if (((Block)section).getSignalDown() != null)
+					{						
+						//set it to be stop (and add to table)
+						((Block) section).getSignalDown().setStop();
 						signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalDown().getSigId()) + " ";
 
 					}
-					
-					else 
+
+					else //if it doesn't have a down signal (next to a point)
 					{
-						if (section.equals(r.getPath().get(r.getPath().size() - 1)))
+						//if the current section in the loop is the destination signal's owner
+						if (section.equals(r.getDestOwner()))
 						{
+							//set it to be stop (and add to table)
 							((Block) r.getDestOwner().getNeighList().get(1)).getSignalDown().setStop();
-							signalsString = signalsString + "s" + Integer.toString(((Block) r.getDestOwner().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
+							signalsString = signalsString + "s"
+									+ Integer.toString(((Block) r.getDestOwner().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
 						}
 					}
 				}
-			}	
+			}
 		}
-		
+
 		else
 		{
-			for (Section section : r.getPath() )
+			for (Section section : r.getPath())
 			{
 				if (section instanceof Block)
 				{
-					if(r.getDestOwner().getSignalUp() != null)
+					if (((Block)section).getSignalUp() != null)
 					{
-						((Block) section).getSignalUp().setUp();
+						((Block) section).getSignalUp().setStop();
 						signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalUp().getSigId()) + " ";
 
 					}
-					
-					else 
+
+					else
 					{
 						if (section.equals(r.getPath().get(r.getPath().size() - 1)))
 						{
 							((Block) r.getDestOwner().getNeighList().get(0)).getSignalUp().setStop();
-							signalsString = signalsString + "s" + Integer.toString(((Block) r.getDestOwner().getNeighList().get(0)).getSignalUp().getSigId()) + " ";
+							signalsString = signalsString + "s"
+									+ Integer.toString(((Block) r.getDestOwner().getNeighList().get(0)).getSignalUp().getSigId()) + " ";
 						}
 					}
 				}
-			}	
+			}
 		}
 
 		return signalsString;
@@ -238,52 +287,55 @@ public class InterlockingTableGenerator {
 	public String conflictSettings(Route r)
 	{
 		String conflictString = " ";
-		
-		//for each route in the total journey, excluding the current route 
-		for(int routeCounter = 0; routeCounter < journey.size(); routeCounter++)
+
+		// for each route in the total journey, excluding the current route
+		for (int routeCounter = 0; routeCounter < journey.size(); routeCounter++)
 		{
-			
-			//excludes current route from being compared
+
+			// excludes current route from being compared
 			if (!journey.get(routeCounter).equals(r))
 			{
 				boolean conflictFound = false;
 				Route compareRoute = journey.get(routeCounter);
 				int pathCounter = 0;
-				
-				//loop through the compareRoute's path until conflict is found with the current section of the original route
-				while(!conflictFound && pathCounter < compareRoute.getPath().size())
+
+				// loop through the compareRoute's path until conflict is found
+				// with the current section of the original route
+				while (!conflictFound && pathCounter < compareRoute.getPath().size())
 				{
-					//loop through every section in the path for the current route(current route decided in createTable method)
-					for (Section section: r.getPath())
-					{	
-						
+					// loop through every section in the path for the current
+					// route(current route decided in createTable method)
+					for (Section section : r.getPath())
+					{
+
 						if (section.equals(compareRoute.getPath().get(pathCounter)))
 						{
 							conflictFound = true;
-							conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";	
+							conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";
 
 						}
 					}
-					
+
 					pathCounter++;
-	
+
 				}
-				
+
 			}
-				
-			//if journey is the current route and not the last element, increment the routeCounter 
-			else if (routeCounter < journey.get(routeCounter).getPath().size() - 1)
+
+			// if journey is the current route and not the last element,
+			// ignore the route
+			else //if (routeCounter < journey.get(routeCounter).getPath().size() - 1)
 			{
-				routeCounter++;		
 				
+
 			}
-					
+
 		}
-		
+
 		return conflictString;
 
 	}
-	
+
 	public void printTable()
 	{
 		System.out.println("");

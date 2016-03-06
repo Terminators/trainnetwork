@@ -14,10 +14,13 @@ import net.sf.oval.constraint.NotNull;
 public class Block extends Section {
 	private int bId;
 
-	@NotNull private boolean plus;
+	@NotNull
+	private boolean plus;
 
-	@Length(min=2,max=2) private String leftNeighbour;
-	@Length(min=2,max=2) private String rightNeighbour;
+	@Length(min = 2, max = 2)
+	private String leftNeighbour;
+	@Length(min = 2, max = 2)
+	private String rightNeighbour;
 
 	private Signal signalUp;
 	private Signal signalDown;
@@ -27,8 +30,9 @@ public class Block extends Section {
 
 	private static final HashMap<String, Block> Blocks = new HashMap<String, Block>();
 
-	private Block(@NotNull @Length(min=2,max=2) String bId, String leftNeighbour,
-			@NotNull @Length(min=2,max=2) String rightNeighbour, Boolean plus, @NotNull @Length(min=2,max=2)String signalDown, @NotNull @Length(min=2,max=2)String signalUp)
+	private Block(@NotNull @Length(min = 2, max = 2) String bId, String leftNeighbour,
+			@NotNull @Length(min = 2, max = 2) String rightNeighbour, Boolean plus, @NotNull @Length(min = 2, max = 2) String signalDown,
+			@NotNull @Length(min = 2, max = 2) String signalUp)
 	{
 		super();
 		this.bId = Integer.parseInt(bId.substring(1));
@@ -72,9 +76,7 @@ public class Block extends Section {
 	public String blockString()
 	{
 		return "BLOCK:" + bId + " \n leftNeighbour: " + leftNeighbour + " \n rightNeightbour: " + rightNeighbour + "\n Plus: " + plus
-				+ "\n signalUp: " + signalUp.toString() + "\n signalDown: " + signalDown.toString();
-//		return "BLOCK:" + bId + " \n leftNeighbour: " + ifNull(leftNeighbour) + " \n rightNeightbour: " + ifNull(rightNeighbour)
-//				+ "\n Plus: " + plus + "\n signalUp: " + ifNull(signalUp.toString()) + "\n signalDown: " + ifNull(signalDown.toString());
+				+ "\n signalUp: " + ifNull(signalUp) + "\n signalDown: " + ifNull(signalDown);
 
 	}
 
@@ -162,15 +164,15 @@ public class Block extends Section {
 		return "b" + bId;
 	}
 
-	public String ifNull(String s)
+	public String ifNull(Signal s)
 	{
-		if (s.equals("NA"))
+		if (s == null)
 		{
 			return "NA";
 		}
 
 		else
-			return s;
+			return s.toString();
 	}
 
 }

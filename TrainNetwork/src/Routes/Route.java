@@ -13,16 +13,16 @@ public class Route {
 	
 	private static final HashMap<String, Route> Routes = new HashMap<String, Route>();
 
-	private int destId;
 	private int rId;
+	private int destId;
+	private int sourceId;
 	private boolean up = true;
 	private List<Section> path = new ArrayList<Section>();
 	//private Point point;
 	private boolean hasPoint;
-	private int sourceId;
 
 	
-	private Route(int rId, int sourceId, int destId) throws InvalidRouteException{
+	public Route(int rId, int sourceId, int destId) throws InvalidRouteException{
 		this.rId = rId;
 		this.sourceId = sourceId;
 		this.destId = destId; 
@@ -111,13 +111,15 @@ public class Route {
 
 	}
 
-	public void populatePath(Block sourceBlock, Block destBlock)
+	public void populatePath(Block sourceBlock, Block destBlock) throws InvalidRouteException
 	{
+		int blockCounter = 1;
 		Section temp;
 		
 		//UP
 		if (up)
 		{
+
 			if (sourceBlock.hasOneNeighbour())
 			{
 				temp = sourceBlock.getNeighList().get(0);
@@ -130,8 +132,27 @@ public class Route {
 			{
 				if (temp instanceof Block)
 				{
-					path.add(temp.getNeighList().get(1));
-					temp = temp.getNeighList().get(1);
+					//If both parts of the network are Blocks (and neighbours) and they aren't on the same track (plus and minus) then throw an error
+					if (temp.getNeighList().get(1) instanceof Block) 
+					{
+						if (((Block) temp).isPlus() == ((Block)temp.getNeighList().get(1)).isPlus())
+						{
+							path.add(temp.getNeighList().get(1));
+							temp = temp.getNeighList().get(1);
+							blockCounter++;
+						}
+						
+						else throw new InvalidRouteException("Cannot create a route with two consecutive blocks where each block is on a different part of the track.");
+
+					}
+					
+					else 
+					{
+						path.add(temp.getNeighList().get(1));
+						temp = temp.getNeighList().get(1);
+						blockCounter++;
+					}
+
 				}
 				
 				else if (temp instanceof Point)
@@ -161,6 +182,11 @@ public class Route {
 				
 			} 
 			
+//			if (blockCounter > 2)
+//			{
+//				throw new InvalidRouteException("Problem with " + this.toString() + "Can only create routes that have a maximum of 2 track sections.");
+//			}
+			
 		}
 		
 		//DOWN
@@ -173,8 +199,25 @@ public class Route {
 			{
 				if (temp instanceof Block)
 				{
-					path.add(temp.getNeighList().get(0));
-					temp = temp.getNeighList().get(0);
+					//If both parts of the network are Blocks (and neighbours) and they aren't on the same track (plus and minus) then throw an error
+					if (temp.getNeighList().get(1) instanceof Block) 
+					{
+						if (temp instanceof Block)
+						{
+							path.add(temp.getNeighList().get(0));
+							temp = temp.getNeighList().get(0);
+							blockCounter++;
+						}
+						
+						else throw new InvalidRouteException("Cannot create a route with two consecutive blocks where each block is on a different part of the track.");
+					}
+					
+					else 
+					{
+						path.add(temp.getNeighList().get(0));
+						temp = temp.getNeighList().get(0);
+						blockCounter++;
+					}
 				}
 				
 				else if (temp instanceof Point)
@@ -203,7 +246,12 @@ public class Route {
 					}
 
 				} 
-			} 
+			}
+			
+//			if (blockCounter > 2)
+//			{
+//				throw new InvalidRouteException("Problem with " + this.toString() + "Can only create routes that have a maximum of 2 track sections.");
+//			}
 		}
 		
 	}
@@ -258,6 +306,7 @@ public class Route {
 			{
 				pointCounter++;
 			}
+
 		}
 		
 		if (pointCounter > 1)

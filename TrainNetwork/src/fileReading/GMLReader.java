@@ -57,12 +57,8 @@ public class GMLReader {
 				String neighbour2 = input.readLine();
 				String neighbour3 = input.readLine();
 				String plus  = input.readLine(); 
-				Boolean up = true;
-				if(!plus.equals("plus")){
-				up = false;	
-				}
-								
-				Point p = Point.getInstance(pId.trim(), neighbour1.trim(), neighbour2.trim(), neighbour3.trim(), up);
+							
+				Point p = Point.getInstance(pId.trim(), neighbour1.trim(), neighbour2.trim(), neighbour3.trim());
 				
 				storeSection.add(p);
 				storePoint.add(p);
