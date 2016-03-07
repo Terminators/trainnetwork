@@ -3,29 +3,31 @@ package Routes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 import NetworkRepresentation.Block;
 import NetworkRepresentation.CreateNetwork;
 import NetworkRepresentation.Point;
 import NetworkRepresentation.Section;
+import NetworkRepresentation.Signal;
 
 public class Route {	
 	
 	private static final HashMap<String, Route> Routes = new HashMap<String, Route>();
 
 	private int rId;
-	private int destId;
-	private int sourceId;
+	
+	private Signal dest;
+	private Signal source;
+
 	private boolean up = true;
 	private List<Section> path = new ArrayList<Section>();
-	//private Point point;
 	private boolean hasPoint;
-
 	
 	public Route(int rId, int sourceId, int destId) throws InvalidRouteException{
 		this.rId = rId;
-		this.sourceId = sourceId;
-		this.destId = destId; 
+		source = CreateNetwork.blockBySignal(sourceId).getSignalFromSigId(sourceId);
+		dest = CreateNetwork.blockBySignal(destId).getSignalFromSigId(destId);
 		
 		//if the answer is negative, the direction of the route is UP
 		if ((sourceId - destId) > 0)
@@ -33,7 +35,7 @@ public class Route {
 			up = false;
 		}
 		
-		populatePath(CreateNetwork.blockBySignal(this.sourceId), CreateNetwork.blockBySignal(this.destId) );
+		populatePath(CreateNetwork.blockBySignal(this.source.getSigId()), CreateNetwork.blockBySignal(this.dest.getSigId()) );
 		validRoute();
 				
 	}
@@ -80,13 +82,13 @@ public class Route {
 
 
 	public int getSourceId() {
-		return sourceId;
+		return this.source.getSigId();
 	}
 
 
 
 	public int getDestId() {
-		return destId;
+		return this.dest.getSigId();
 	}
 	
 	
@@ -102,12 +104,12 @@ public class Route {
 
 	public Block getSourceOwner()
 	{
-		return CreateNetwork.blockBySignal(sourceId);
+		return CreateNetwork.blockBySignal(this.source.getSigId());
 	}
 
 	public Block getDestOwner()
 	{
-		return CreateNetwork.blockBySignal(destId);
+		return CreateNetwork.blockBySignal(this.dest.getSigId());
 
 	}
 
@@ -132,27 +134,33 @@ public class Route {
 			{
 				if (temp instanceof Block)
 				{
-					//If both parts of the network are Blocks (and neighbours) and they aren't on the same track (plus and minus) then throw an error
-					if (temp.getNeighList().get(1) instanceof Block) 
+					try
 					{
-						if (((Block) temp).isPlus() == ((Block)temp.getNeighList().get(1)).isPlus())
+						//If both parts of the network are Blocks (and neighbours) and they aren't on the same track (plus and minus) then throw an error
+						if (temp.getNeighList().get(1) instanceof Block) 
+						{
+							if (((Block) temp).isPlus() == ((Block)temp.getNeighList().get(1)).isPlus())
+							{
+								path.add(temp.getNeighList().get(1));
+								temp = temp.getNeighList().get(1);
+								blockCounter++;
+							}
+							
+							else throw new InvalidRouteException("Cannot create a route with two consecutive blocks where each block is on a different part of the track.");
+
+						}
+						
+						else 
 						{
 							path.add(temp.getNeighList().get(1));
 							temp = temp.getNeighList().get(1);
 							blockCounter++;
 						}
-						
-						else throw new InvalidRouteException("Cannot create a route with two consecutive blocks where each block is on a different part of the track.");
-
-					}
-					
-					else 
+					} catch (java.lang.IndexOutOfBoundsException e1) //Stops a route that will go from inside a pair of points to a block inside another pair of points but on the other track
 					{
-						path.add(temp.getNeighList().get(1));
-						temp = temp.getNeighList().get(1);
-						blockCounter++;
-					}
+						throw new InvalidRouteException("Cannot create a route which goes back on itself.");
 
+					}
 				}
 				
 				else if (temp instanceof Point)
@@ -199,25 +207,34 @@ public class Route {
 			{
 				if (temp instanceof Block)
 				{
-					//If both parts of the network are Blocks (and neighbours) and they aren't on the same track (plus and minus) then throw an error
-					if (temp.getNeighList().get(1) instanceof Block) 
+					try
 					{
-						if (temp instanceof Block)
+						
+						//If both parts of the network are Blocks (and neighbours) and they aren't on the same track (plus and minus) then throw an error
+						if (temp.getNeighList().get(1) instanceof Block) 
+						{
+							if (temp instanceof Block)
+							{
+								path.add(temp.getNeighList().get(0));
+								temp = temp.getNeighList().get(0);
+								blockCounter++;
+							}
+							
+							else throw new InvalidRouteException("Cannot create a route with two consecutive blocks where each block is on a different part of the track.");
+						}
+						
+						else 
 						{
 							path.add(temp.getNeighList().get(0));
 							temp = temp.getNeighList().get(0);
 							blockCounter++;
 						}
-						
-						else throw new InvalidRouteException("Cannot create a route with two consecutive blocks where each block is on a different part of the track.");
+					} catch (java.lang.IndexOutOfBoundsException e1) //Stops a route that will go from inside a pair of points to a block inside another pair of points but on the other track
+					{
+						throw new InvalidRouteException("Cannot create a route which goes back on itself.");
+
 					}
 					
-					else 
-					{
-						path.add(temp.getNeighList().get(0));
-						temp = temp.getNeighList().get(0);
-						blockCounter++;
-					}
 				}
 				
 				else if (temp instanceof Point)
@@ -254,6 +271,11 @@ public class Route {
 //			}
 		}
 		
+		if (path.size() == 1)
+		{
+			path.add(CreateNetwork.blockBySignal(this.source.getSigId()));
+		}
+		
 	}
 	
 	public boolean hasPoint() {
@@ -262,7 +284,7 @@ public class Route {
 	
 	public Point getPoint()
 	{
-		for (Section section : this.path )
+		for (Section section : path )
 		{
 			if (section instanceof Point)
 			{
@@ -274,13 +296,13 @@ public class Route {
 
 	public void printRoute()
 	{
-		System.out.print("(s" + sourceId + ", ");
+		System.out.print("(s" + this.source.getSigId() + ", ");
 		for (int i=0; i < path.size(); i++)
 		{
 			System.out.print(path.get(i) + ", ");
 		}
 		
-		System.out.print("s" + destId + ")");
+		System.out.print("s" + this.dest.getSigId() + ")");
 		System.out.println("");
 
 	}
@@ -291,33 +313,50 @@ public class Route {
 		for (int i=0; i < path.size(); i++)
 		{
 			pathString = pathString + path.get(i) + ", ";
-		}
-		return pathString;
+		}	
+		
+		return pathString.substring(0, pathString.length() - 2);
 	}
 	
 	public void validRoute() throws InvalidRouteException
 	{
 		int pointCounter = 0;
 		
-
 		for (Section section : this.path )
 		{
 			if (section instanceof Point)
 			{
 				pointCounter++;
 			}
-
 		}
 		
 		if (pointCounter > 1)
 		{
-			throw new InvalidRouteException("Routes can only pass through one point.");
+			throw new InvalidRouteException("Route r" + rId + ": Routes can only pass through one point.");
 
 		}
 		
-		if (sourceId == destId)
+		if (this.source.getSigId() == this.dest.getSigId())
 		{
-			throw new InvalidRouteException("Source and Destination signals cannot be equal.");
+			throw new InvalidRouteException("Route r" + rId + ": Source and Destination signals cannot be equal.");
+		}
+		
+		if (source.isUp() != dest.isUp())
+		{
+			throw new InvalidRouteException("Route r" + rId + ": Cannot go from a signal in one direction, to a signal in another direction.");
+		}
+		
+		// Checks whether the source signal is the same direction as the direction of the route
+		if (source.isUp() != up)
+		{
+			throw new InvalidRouteException("Route r" + rId + ": The source signal must go in the direction of the route");
+		}
+		
+		// Checks whether the destination signal is the same direction as the direction of the route
+		if (dest.isUp() != up)
+		{
+			throw new InvalidRouteException("Route r" + rId + ": The destination signal must go in the direction of the route");
+
 		}
 
 	}

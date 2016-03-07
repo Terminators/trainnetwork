@@ -28,6 +28,16 @@ public class Signal {
 	public boolean isStop() {
 		return stop;
 	}
+	
+	public String state()
+	{
+		if (stop)
+		{
+			return "stop";
+		}
+		
+		else return "clear";
+	}
 
 	public void setStop() {
 		this.stop = true;
@@ -49,7 +59,5 @@ public class Signal {
 	public void setOwner(Block owner) {
 		this.owner = owner;
 	}
-
-
 
 }

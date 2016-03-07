@@ -44,7 +44,7 @@ public class Point extends Section {
 	}
 	
 	public String pointString() {
-		return "POINT:" + pId + " \n neighbour1: " + neighbour1 + " \n neighbour2: " + neighbour2 +  " \n neighbour3: "+ neighbour3+ "\n Plus: " + plus;
+		return "POINT:" + pId + " \n neighbour1: " + neighbour1 + " \n neighbour2: " + neighbour2 +  " \n neighbour3: "+ neighbour3;
 
 	}
 	

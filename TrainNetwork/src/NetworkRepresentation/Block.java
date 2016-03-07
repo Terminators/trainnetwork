@@ -72,11 +72,32 @@ public class Block extends Section {
 		return Blocks.get(key);
 
 	}
+	
+	public Signal getSignalFromSigId(int sigId)
+	{
+		if (signalUp != null)
+		{
+			if (sigId == signalUp.getSigId())
+			{
+				return signalUp;
+			}
+		}
+		
+		if (signalDown != null)
+		{
+			if (sigId == signalDown.getSigId())
+			{
+				return signalDown;
+			}
+		}
+
+		return null;
+	}
 
 	public String blockString()
 	{
 		return "BLOCK:" + bId + " \n leftNeighbour: " + leftNeighbour + " \n rightNeightbour: " + rightNeighbour + "\n Plus: " + plus
-				+ "\n signalUp: " + ifNull(signalUp) + "\n signalDown: " + ifNull(signalDown);
+				+ "\n signalUp: " + ifNull(signalUp) + "- " + ifNullState(signalUp) + "\n signalDown: " + ifNull(signalDown) + "- " + ifNullState((signalDown));
 
 	}
 
@@ -174,5 +195,41 @@ public class Block extends Section {
 		else
 			return s.toString();
 	}
+	
+	public String ifNullState(Signal s)
+	{
+		if (s == null)
+		{
+			return "NA";
+		}
+
+		else
+			return s.state();
+	}
+	
+//	public boolean hasSignalInDirection(boolean routeUp)
+//	{
+//		if (routeUp == true && signalUp != null)
+//		{
+//			return true;
+//		}
+//		
+//		
+//		if (signalUp != null)
+//		{
+//			return signalUp;
+//
+//		}
+//		else return signalDown;
+//		
+//	}
+	
+//	public boolean insidePairOfPoints()
+//	{
+//		if ((this.getNeighList().get(0) instanceof Point) && (this.getNeighList().get(1) instanceof Point))
+//		{
+//			if ()
+//		}
+//	}
 
 }

@@ -18,8 +18,11 @@ public class GMLReader {
 	ArrayList<Block> storeBlock = new ArrayList<Block>(); // Store a list of all the blocks from the file
 	ArrayList<Point> storePoint = new ArrayList<Point>(); // Store a list of all the point from the file
 	List<Section> storeSection = new ArrayList<Section>(); //Store list of every section of the track
+	
+	ValidateNetwork v = new ValidateNetwork();
 
-	public void readFile(String path) throws IOException {
+
+	public void readFile(String path) throws IOException, InvalidNetworkException {
 
 		BufferedReader input = new BufferedReader(new FileReader(path));
 
@@ -44,10 +47,10 @@ public class GMLReader {
 				String signalUp = input.readLine();
 				String signalDown = input.readLine();
 				
-				Block s = Block.getInstance(bId.trim(), left.trim(), right.trim(), up, signalUp.trim(), signalDown.trim());
-				
-				storeSection.add(s);
-				storeBlock.add(s);
+				Block b = Block.getInstance(bId.trim(), left.trim(), right.trim(), up, signalUp.trim(), signalDown.trim());
+				ValidateNetwork.validateBlock(b);
+				storeSection.add(b);
+				storeBlock.add(b);
 
 			}
 			if (line.equals("Point")) {

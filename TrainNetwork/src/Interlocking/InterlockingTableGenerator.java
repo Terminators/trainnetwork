@@ -287,7 +287,7 @@ public class InterlockingTableGenerator {
 	public String conflictSettings(Route r)
 	{
 		String conflictString = " ";
-
+		
 		// for each route in the total journey, excluding the current route
 		for (int routeCounter = 0; routeCounter < journey.size(); routeCounter++)
 		{
