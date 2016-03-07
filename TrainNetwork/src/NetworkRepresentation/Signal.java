@@ -1,6 +1,9 @@
 package NetworkRepresentation;
 
+import net.sf.oval.constraint.NotNull;
+
 public class Signal {
+	@NotNull
 	private int sigId;
 	private boolean stop = false; 
 	private boolean up;

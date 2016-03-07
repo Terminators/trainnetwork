@@ -22,20 +22,16 @@ public class ValidateNetwork {
 		}
 	}
 	
-	public static void validate(Point p) throws InvalidNetworkException
+	public static void validatePoint(Point p) throws InvalidNetworkException
 	{
-		for (Section section : p.getNeighList())
-		{
-			if (section == null)
-			{
-				throw new InvalidNetworkException("Point " + p + "has to have 3 neighbours.");
-			}
-			
-			if (section instanceof Point)
-			{
-				throw new InvalidNetworkException("Point " + p + "'s neighbours have to be blocks .");
+		Validator validator = new Validator();
 
-			}
+		List<ConstraintViolation> violations = validator.validate(p);
+		
+		if(violations.size()>0)
+		{
+		  System.out.println("Point " + p + " is invalid.");
+		  throw new InvalidNetworkException(violations);
 		}
 	}
 	

@@ -1,7 +1,9 @@
 package NetworkRepresentation;
 
 import java.util.HashMap;
+
 import net.sf.oval.constraint.Length;
+import net.sf.oval.constraint.MatchPattern;
 import net.sf.oval.constraint.NotNull;
 
 /**
@@ -12,14 +14,17 @@ import net.sf.oval.constraint.NotNull;
  */
 
 public class Block extends Section {
+	@NotNull
 	private int bId;
 
-	@NotNull
-	private boolean plus;
+	@NotNull (message = "Must input which part of the track a block is on eg. plus or minus")
+	private Boolean plus;
 
-	@Length(min = 2, max = 2)
+	@Length
+	@MatchPattern(pattern = { "[bBpP]\\d|^NA" }, message = "Please input a valid section ie. b1, p3 OR input NA")
 	private String leftNeighbour;
-	@Length(min = 2, max = 2)
+	@Length
+	@MatchPattern(pattern = { "[bBpP]\\d|^NA" }, message = "Please input a valid section ie. b1, p3 OR input NA")
 	private String rightNeighbour;
 
 	private Signal signalUp;
@@ -30,38 +35,50 @@ public class Block extends Section {
 
 	private static final HashMap<String, Block> Blocks = new HashMap<String, Block>();
 
-	private Block(@NotNull @Length(min = 2, max = 2) String bId, String leftNeighbour,
-			@NotNull @Length(min = 2, max = 2) String rightNeighbour, Boolean plus, @NotNull @Length(min = 2, max = 2) String signalDown,
-			@NotNull @Length(min = 2, max = 2) String signalUp)
+	private Block(@NotNull @MatchPattern(pattern = { "[bB]\\d" }) String bId, String leftNeighbour, String rightNeighbour, Boolean plus,
+			@NotNull @MatchPattern(pattern = { "[sS]\\d" }) String signalDown,
+			@NotNull @MatchPattern(pattern = { "[sS]\\d" }) String signalUp) throws InvalidNetworkException
 	{
 		super();
-		this.bId = Integer.parseInt(bId.substring(1));
 
-		this.leftNeighbour = leftNeighbour;
-		this.rightNeighbour = rightNeighbour;
-
-		this.plus = plus;
-
-		if (!signalUp.equals("NA"))
+		try
 		{
-			this.signalUp = new Signal(Integer.parseInt(signalUp.substring(1)), true);
-		} else
+			this.bId = Integer.parseInt(bId.substring(1));
+		} catch (java.lang.NumberFormatException e1)
 		{
-			this.signalUp = null;
+			throw new InvalidNetworkException("Block " + this + ": Please input valid block id eg. b1");
 		}
+		try
+		{
+			this.leftNeighbour = leftNeighbour;
+			this.rightNeighbour = rightNeighbour;
 
-		if (!signalDown.equals("NA"))
+			this.plus = plus;
+
+			if (!signalUp.equals("NA"))
+			{
+				this.signalUp = new Signal(Integer.parseInt(signalUp.substring(1)), true);
+			} else
+			{
+				this.signalUp = null;
+			}
+
+			if (!signalDown.equals("NA"))
+			{
+				this.signalDown = new Signal(Integer.parseInt(signalDown.substring(1)), false);
+			} else
+			{
+				this.signalDown = null;
+			}
+		} catch (java.lang.NumberFormatException e1)
 		{
-			this.signalDown = new Signal(Integer.parseInt(signalDown.substring(1)), false);
-		} else
-		{
-			this.signalDown = null;
+			throw new InvalidNetworkException("Block " + this + ": Please input valid signal eg. s1");
 		}
 
 	}
 
 	public static Block getInstance(String name, String leftNeighbour, String rightNeighbour, Boolean plus, String signalOne,
-			String signalTwo)
+			String signalTwo) throws InvalidNetworkException
 	{
 		final String key = name;
 		if (!Blocks.containsKey(key))
@@ -72,7 +89,7 @@ public class Block extends Section {
 		return Blocks.get(key);
 
 	}
-	
+
 	public Signal getSignalFromSigId(int sigId)
 	{
 		if (signalUp != null)
@@ -82,7 +99,7 @@ public class Block extends Section {
 				return signalUp;
 			}
 		}
-		
+
 		if (signalDown != null)
 		{
 			if (sigId == signalDown.getSigId())
@@ -97,7 +114,8 @@ public class Block extends Section {
 	public String blockString()
 	{
 		return "BLOCK:" + bId + " \n leftNeighbour: " + leftNeighbour + " \n rightNeightbour: " + rightNeighbour + "\n Plus: " + plus
-				+ "\n signalUp: " + ifNull(signalUp) + "- " + ifNullState(signalUp) + "\n signalDown: " + ifNull(signalDown) + "- " + ifNullState((signalDown));
+				+ "\n signalUp: " + ifNull(signalUp) + "- " + ifNullState(signalUp) + "\n signalDown: " + ifNull(signalDown) + "- "
+				+ ifNullState((signalDown));
 
 	}
 
@@ -195,7 +213,7 @@ public class Block extends Section {
 		else
 			return s.toString();
 	}
-	
+
 	public String ifNullState(Signal s)
 	{
 		if (s == null)
@@ -206,30 +224,31 @@ public class Block extends Section {
 		else
 			return s.state();
 	}
-	
-//	public boolean hasSignalInDirection(boolean routeUp)
-//	{
-//		if (routeUp == true && signalUp != null)
-//		{
-//			return true;
-//		}
-//		
-//		
-//		if (signalUp != null)
-//		{
-//			return signalUp;
-//
-//		}
-//		else return signalDown;
-//		
-//	}
-	
-//	public boolean insidePairOfPoints()
-//	{
-//		if ((this.getNeighList().get(0) instanceof Point) && (this.getNeighList().get(1) instanceof Point))
-//		{
-//			if ()
-//		}
-//	}
+
+	// public boolean hasSignalInDirection(boolean routeUp)
+	// {
+	// if (routeUp == true && signalUp != null)
+	// {
+	// return true;
+	// }
+	//
+	//
+	// if (signalUp != null)
+	// {
+	// return signalUp;
+	//
+	// }
+	// else return signalDown;
+	//
+	// }
+
+	// public boolean insidePairOfPoints()
+	// {
+	// if ((this.getNeighList().get(0) instanceof Point) &&
+	// (this.getNeighList().get(1) instanceof Point))
+	// {
+	// if ()
+	// }
+	// }
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import Interlocking.InterlockingTableGenerator;
 import NetworkRepresentation.CreateNetwork;
 import NetworkRepresentation.InvalidNetworkException;
+import NetworkRepresentation.ValidateNetwork;
 import Routes.InvalidRouteException;
 import Routes.Route;
 import fileReading.GMLReader;
@@ -34,7 +35,7 @@ public class test {
 			System.out.println(reader.getStorePoint().get(l).pointString() + "\n");
 
 		}
-		
+				
 		CreateNetwork.addEdges(reader);
 		CreateNetwork.findPairs(reader);
 		CreateNetwork.populateSignalMap(reader);
@@ -163,7 +164,7 @@ public class test {
 //		j1.add(r7);
 //		j1.add(r8);
 //		
-		InterlockingTableGenerator t = new InterlockingTableGenerator(j1);
+		InterlockingTableGenerator t = new InterlockingTableGenerator();
 		t.printTable();
 		
 		for (int i = 0; i < reader.getStoreBlock().size(); i++) {

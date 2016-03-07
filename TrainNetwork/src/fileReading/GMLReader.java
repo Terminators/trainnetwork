@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import NetworkRepresentation.*;
+import Routes.InvalidRouteException;
 
 /**
  * 
@@ -21,8 +22,7 @@ public class GMLReader {
 	
 	ValidateNetwork v = new ValidateNetwork();
 
-
-	public void readFile(String path) throws IOException, InvalidNetworkException {
+	public void readFile(String path) throws IOException, InvalidNetworkException, InvalidRouteException {
 
 		BufferedReader input = new BufferedReader(new FileReader(path));
 
@@ -38,10 +38,13 @@ public class GMLReader {
 				String bId = input.readLine();
 				String left = input.readLine();
 				String right = input.readLine();
-				String plus  = input.readLine(); 
-				Boolean up = true;
-				if(!plus.equals("plus")){
-				up = false;	
+				String track  = input.readLine(); 
+				Boolean up = null;
+				if(track.equals("plus")){
+					up = true;	
+				}
+				else if(track.equals("minus")){
+					up = false;	
 				}
 				
 				String signalUp = input.readLine();
@@ -53,19 +56,24 @@ public class GMLReader {
 				storeBlock.add(b);
 
 			}
-			if (line.equals("Point")) {
+			else if (line.equals("Point")) {
 				
 				String pId = input.readLine();
 				String neighbour1 = input.readLine();
 				String neighbour2 = input.readLine();
 				String neighbour3 = input.readLine();
-				String plus  = input.readLine(); 
 							
 				Point p = Point.getInstance(pId.trim(), neighbour1.trim(), neighbour2.trim(), neighbour3.trim());
-				
+				ValidateNetwork.validatePoint(p);
+
 				storeSection.add(p);
 				storePoint.add(p);
 				
+			}
+			
+			else 
+			{
+				throw new InvalidRouteException("Please only define a Block or a Point.");	
 			}
 
 		}

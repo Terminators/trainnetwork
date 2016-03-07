@@ -2,6 +2,9 @@ package NetworkRepresentation;
 
 import java.util.HashMap;
 import java.util.List;
+
+import net.sf.oval.constraint.MatchPattern;
+import net.sf.oval.constraint.NotNull;
 import Routes.Route;
 
 /**
@@ -12,10 +15,14 @@ import Routes.Route;
  */
 
 public class Point extends Section {
+	@NotNull
 	private int pId;
 	
+	@MatchPattern(pattern = { "[bB]\\d" }, message = "Please input a valid block eg. b1 NOTE: Points must have 3 Neighbours")
 	private String neighbour1;
+	@MatchPattern(pattern = { "[bB]\\d" }, message = "Please input a valid block eg. b1 NOTE: Points must have 3 Neighbours")
 	private String neighbour2;
+	@MatchPattern(pattern = { "[bB]\\d" }, message = "Please input a valid block eg. b1 NOTE: Points must have 3 Neighbours")
 	private String neighbour3;
 	
 	private boolean plus;
@@ -25,15 +32,22 @@ public class Point extends Section {
 	
 	private static final HashMap<String, Point> Point = new HashMap<String, Point>();
 	
-	private Point(String pId, String neighbour1, String neighbour2, String neighbour3){
+	private Point(String pId, String neighbour1, String neighbour2, String neighbour3) throws InvalidNetworkException{
 		super();
-		this.pId = Integer.parseInt(pId.substring(1));
+		try 
+		{
+			this.pId = Integer.parseInt(pId.substring(1));
+
+		} catch(java.lang.NumberFormatException e1)
+		{
+			throw new InvalidNetworkException("Point " + this + ": Please input valid block id eg. p1");
+		}
 		this.neighbour1 = neighbour1;
 		this.neighbour2 = neighbour2; 
 		this.neighbour3 = neighbour3;
 	}
 	
-	public static Point getInstance(String pId, String neighbour1, String neighbour2, String neighbour3){
+	public static Point getInstance(String pId, String neighbour1, String neighbour2, String neighbour3) throws InvalidNetworkException{
 		final String key = pId; 
 		if(!Point.containsKey(key)){
 			Point.put(key, new Point(pId, neighbour1, neighbour2, neighbour3));	

@@ -49,22 +49,15 @@ public class InterlockingTableGenerator {
 		String[] columnNames = { "ID", "Source", "Destination", "Points", "Signals", "Path", "Conflict" };
 		List<Object[]> dataList = new ArrayList<Object[]>();
 
-		int totalRouteCounter = 0;
-
-		for (int i = 0; i < journeys.size(); i++)
+		for (int journeyCounter = 0; journeyCounter < journeys.size(); journeyCounter++)
 		{
-
-			if (totalRouteCounter < 3)
+			List<Route> currentJourney = journeys.get(journeyCounter);
+			for (int routeCounter = 0; routeCounter < currentJourney.size(); routeCounter++)
 			{
-				for (int journeyCounter = 0; journeyCounter < journeys.get(i).size(); journeyCounter++)
-				{
-					ArrayList<Route> routeList = journeys.get(i);
-					dataList.add(generateSettings(routeList.get(journeyCounter)));
-
-					totalRouteCounter++;
-				}
+				dataList.add(generateSettings(currentJourney.get(routeCounter)));
 			}
 		}
+		
 
 		Object[][] data = new String[dataList.size()][];
 		data = dataList.toArray(data);
@@ -288,48 +281,55 @@ public class InterlockingTableGenerator {
 	{
 		String conflictString = " ";
 		
-		// for each route in the total journey, excluding the current route
-		for (int routeCounter = 0; routeCounter < journey.size(); routeCounter++)
+		
+		//loop through every journey in the 
+		
+		for (int journeyCounter = 0; journeyCounter < journeys.size(); journeyCounter++)
 		{
-
-			// excludes current route from being compared
-			if (!journey.get(routeCounter).equals(r))
+			journey = journeys.get(journeyCounter);
+			// for each route in the total journey, excluding the current route
+			for (int routeCounter = 0; routeCounter < journey.size(); routeCounter++)
 			{
-				boolean conflictFound = false;
-				Route compareRoute = journey.get(routeCounter);
-				int pathCounter = 0;
 
-				// loop through the compareRoute's path until conflict is found
-				// with the current section of the original route
-				while (!conflictFound && pathCounter < compareRoute.getPath().size())
+				// excludes current route from being compared
+				if (!journey.get(routeCounter).equals(r))
 				{
-					// loop through every section in the path for the current
-					// route(current route decided in createTable method)
-					for (Section section : r.getPath())
+					boolean conflictFound = false;
+					Route compareRoute = journey.get(routeCounter);
+					int pathCounter = 0;
+
+					// loop through the compareRoute's path until conflict is found
+					// with the current section of the original route
+					while (!conflictFound && pathCounter < compareRoute.getPath().size())
 					{
-
-						if (section.equals(compareRoute.getPath().get(pathCounter)))
+						// loop through every section in the path for the current
+						// route(current route decided in createTable method)
+						for (Section section : r.getPath())
 						{
-							conflictFound = true;
-							conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";
 
+							if (section.equals(compareRoute.getPath().get(pathCounter)))
+							{
+								conflictFound = true;
+								conflictString = conflictString + "r" + Integer.toString(compareRoute.getrId()) + " ";
+
+							}
 						}
+
+						pathCounter++;
+
 					}
 
-					pathCounter++;
+				}
+
+				// if journey is the current route and not the last element,
+				// ignore the route
+				else //if (routeCounter < journey.get(routeCounter).getPath().size() - 1)
+				{
+					
 
 				}
 
 			}
-
-			// if journey is the current route and not the last element,
-			// ignore the route
-			else //if (routeCounter < journey.get(routeCounter).getPath().size() - 1)
-			{
-				
-
-			}
-
 		}
 
 		return conflictString;

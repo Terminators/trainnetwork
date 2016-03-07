@@ -80,7 +80,6 @@ public class InputJourney {
 		} catch (InputMismatchException e1)
 		{
 			throw new InvalidRouteException("Must input a positive integer for number of routes");
-
 		}
 
 	}
