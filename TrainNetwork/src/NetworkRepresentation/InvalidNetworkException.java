@@ -5,7 +5,7 @@ import java.util.List;
 import net.sf.oval.ConstraintViolation;
 
 public class InvalidNetworkException extends Exception {
-	
+
 	/**
 	 * 
 	 */
@@ -15,12 +15,11 @@ public class InvalidNetworkException extends Exception {
 	{
 		super(message);
 	}
-	
 
 	public InvalidNetworkException(List<ConstraintViolation> violations)
 	{
 		super();
-		
+
 		for (ConstraintViolation violation : violations)
 		{
 			System.out.println(violation.getMessage());

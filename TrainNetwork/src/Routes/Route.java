@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+import net.sf.oval.ConstraintViolation;
+import net.sf.oval.Validator;
+import net.sf.oval.constraint.NotNull;
 import NetworkRepresentation.Block;
 import NetworkRepresentation.CreateNetwork;
+import NetworkRepresentation.InvalidNetworkException;
 import NetworkRepresentation.Point;
 import NetworkRepresentation.Section;
 import NetworkRepresentation.Signal;
@@ -15,6 +19,7 @@ public class Route {
 	
 	private static final HashMap<String, Route> Routes = new HashMap<String, Route>();
 
+	@NotNull
 	private int rId;
 	
 	private Signal dest;
@@ -24,7 +29,7 @@ public class Route {
 	private List<Section> path = new ArrayList<Section>();
 	private boolean hasPoint;
 	
-	public Route(int rId, int sourceId, int destId) throws InvalidRouteException{
+	public Route(int rId, @NotNull int sourceId,  @NotNull int destId) throws InvalidRouteException{
 		this.rId = rId;
 		source = CreateNetwork.blockBySignal(sourceId).getSignalFromSigId(sourceId);
 		dest = CreateNetwork.blockBySignal(destId).getSignalFromSigId(destId);
@@ -35,9 +40,7 @@ public class Route {
 			up = false;
 		}
 		
-		populatePath(CreateNetwork.blockBySignal(this.source.getSigId()), CreateNetwork.blockBySignal(this.dest.getSigId()) );
-		validRoute();
-				
+		populatePath(CreateNetwork.blockBySignal(this.source.getSigId()), CreateNetwork.blockBySignal(this.dest.getSigId()) );				
 	}
 	
 	public static Route getInstance(int rId, int sourceId, int destId) throws InvalidRouteException{
@@ -318,8 +321,24 @@ public class Route {
 		return pathString.substring(0, pathString.length() - 2);
 	}
 	
-	public void validRoute() throws InvalidRouteException
+	public void validateRoute() throws InvalidRouteException
 	{
+		Validator validator = new Validator();
+
+		List<ConstraintViolation> violations = validator.validate(this);
+		
+		validRoute();
+		
+		if(violations.size()>0)
+		{
+		  System.out.println("Route " + this + " is invalid.");
+		  throw new InvalidRouteException(violations);
+		}
+		
+	}
+	
+	public void validRoute() throws InvalidRouteException
+	{		
 		int pointCounter = 0;
 		
 		for (Section section : this.path )
@@ -332,7 +351,7 @@ public class Route {
 		
 		if (pointCounter > 1)
 		{
-			throw new InvalidRouteException("Route r" + rId + ": Routes can only pass through one point.");
+			throw new InvalidRouteException("Route r" + this + ": Routes can only pass through one point.");
 
 		}
 		

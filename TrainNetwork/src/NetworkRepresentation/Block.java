@@ -17,7 +17,7 @@ public class Block extends Section {
 	@NotNull
 	private int bId;
 
-	@NotNull (message = "Must input which part of the track a block is on eg. plus or minus")
+	@NotNull(message = "Must input which part of the track a block is on eg. plus or minus")
 	private Boolean plus;
 
 	@Length
@@ -224,31 +224,4 @@ public class Block extends Section {
 		else
 			return s.state();
 	}
-
-	// public boolean hasSignalInDirection(boolean routeUp)
-	// {
-	// if (routeUp == true && signalUp != null)
-	// {
-	// return true;
-	// }
-	//
-	//
-	// if (signalUp != null)
-	// {
-	// return signalUp;
-	//
-	// }
-	// else return signalDown;
-	//
-	// }
-
-	// public boolean insidePairOfPoints()
-	// {
-	// if ((this.getNeighList().get(0) instanceof Point) &&
-	// (this.getNeighList().get(1) instanceof Point))
-	// {
-	// if ()
-	// }
-	// }
-
 }

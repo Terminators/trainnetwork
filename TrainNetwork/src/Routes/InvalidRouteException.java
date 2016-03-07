@@ -1,5 +1,9 @@
 package Routes;
 
+import java.util.List;
+
+import net.sf.oval.ConstraintViolation;
+
 public class InvalidRouteException extends Exception {
 	
 	/**
@@ -10,6 +14,16 @@ public class InvalidRouteException extends Exception {
 	public InvalidRouteException(String message)
 	{
 		super(message);
+	}
+	
+	public InvalidRouteException(List<ConstraintViolation> violations)
+	{
+		super();
+		
+		for (ConstraintViolation violation : violations)
+		{
+			System.out.println(violation.getMessage());
+		}
 	}
 
 }

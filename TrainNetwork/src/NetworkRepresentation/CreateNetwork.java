@@ -2,6 +2,7 @@ package NetworkRepresentation;
 
 import java.util.HashMap;
 
+import Routes.InvalidRouteException;
 import fileReading.GMLReader;
 
 public class CreateNetwork {
@@ -112,19 +113,33 @@ public class CreateNetwork {
 
 	}
 	
-	public static void populateSignalMap(GMLReader reader)
+	public static void populateSignalMap(GMLReader reader) throws InvalidNetworkException
 	{
 		for (int i = 0; i < reader.getStoreBlock().size(); i++)
 		{
 			if (reader.getStoreBlock().get(i).getSignalDown() != null)
 			{
-				signalMap.put(reader.getStoreBlock().get(i).getSignalDown().getSigId(), reader.getStoreBlock().get(i));
+				if (signalMap.get(reader.getStoreBlock().get(i).getSignalDown().getSigId()) == null)
+				{
+					signalMap.put(reader.getStoreBlock().get(i).getSignalDown().getSigId(), reader.getStoreBlock().get(i));
+
+				}
+				
+				else throw new InvalidNetworkException("Cannot have two of the same signal in the network");
 
 			}
 			
 			if (reader.getStoreBlock().get(i).getSignalUp() != null)
 			{
-				signalMap.put(reader.getStoreBlock().get(i).getSignalUp().getSigId(), reader.getStoreBlock().get(i));
+				
+				if (signalMap.get(reader.getStoreBlock().get(i).getSignalUp().getSigId()) == null)
+				{				
+					signalMap.put(reader.getStoreBlock().get(i).getSignalUp().getSigId(), reader.getStoreBlock().get(i));
+
+				}
+				
+				else throw new InvalidNetworkException("Cannot have two of the same signal in the network");
+
 
 			}
 		}

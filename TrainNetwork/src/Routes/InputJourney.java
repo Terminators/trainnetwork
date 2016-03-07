@@ -5,6 +5,10 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.lang.Validate;
+
+import NetworkRepresentation.ValidateNetwork;
+
 /**
  * 
  * @author Ryan Crosby, Jack Chandler
@@ -21,6 +25,8 @@ public class InputJourney {
 	ArrayList<Route> journey = new ArrayList<Route>();
 	int failCounter;
 
+	ValidateNetwork v = new ValidateNetwork();
+	
 	public void inputRoute() throws InvalidRouteException
 	{
 
@@ -47,6 +53,7 @@ public class InputJourney {
 				System.out.println("Please Enter a final destination ------ Such as S6");
 				dId = Integer.parseInt(inputDestination.next().substring(1));
 				Route r = Route.getInstance(Route.getRoutes().size() + 1, sId, dId);
+				r.validateRoute();
 				journey.add(r);
 			} catch (java.lang.NumberFormatException e1)
 			{

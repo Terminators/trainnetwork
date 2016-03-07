@@ -21,26 +21,26 @@ public class InterlockingTableGenerator {
 	{
 		createTable();
 	}
-	
+
 	public InterlockingTableGenerator(List<Route> journey)
 	{
 		this.journey = journey;
 		createTableNoInput();
 	}
-	
+
 	public void createTableNoInput()
 	{
-		String[] columnNames = {"ID", "Source", "Destination", "Points", "Signals", "Path", "Conflict"};
+		String[] columnNames = { "ID", "Source", "Destination", "Points", "Signals", "Path", "Conflict" };
 		Object[][] data = new String[journey.size() + 1][];
-		
-		for (int i=0; i < journey.size(); i++)
+
+		for (int i = 0; i < journey.size(); i++)
 		{
-			
+
 			data[i] = generateSettings(journey.get(i));
-			
+
 		}
-		
-		 tt =  new TextTable(columnNames, data);
+
+		tt = new TextTable(columnNames, data);
 	}
 
 	public void addToTable()
@@ -57,7 +57,6 @@ public class InterlockingTableGenerator {
 				dataList.add(generateSettings(currentJourney.get(routeCounter)));
 			}
 		}
-		
 
 		Object[][] data = new String[dataList.size()][];
 		data = dataList.toArray(data);
@@ -79,8 +78,7 @@ public class InterlockingTableGenerator {
 			}
 			addToTable();
 
-		}
-		catch (InputMismatchException e1)
+		} catch (InputMismatchException e1)
 		{
 			throw new InvalidRouteException("Must input a positive integer for number of journeys");
 		}
@@ -145,7 +143,7 @@ public class InterlockingTableGenerator {
 						r.getPoint().getPair().setPlus();
 						pointsString = pointsString + "p" + Integer.toString(r.getPoint().getPair().getpId()) + ":p  ";
 					}
-					
+
 				}
 			}
 
@@ -218,27 +216,29 @@ public class InterlockingTableGenerator {
 		// Path Signals
 		if (r.isUp())
 		{
-			//loop through all the sections in a route's path
+			// loop through all the sections in a route's path
 			for (Section section : r.getPath())
 			{
-				//if the current section in the path is a block
+				// if the current section in the path is a block
 				if (section instanceof Block)
 				{
-					//if the current block has a down signal
-					if (((Block)section).getSignalDown() != null)
-					{						
-						//set it to be stop (and add to table)
+					// if the current block has a down signal
+					if (((Block) section).getSignalDown() != null)
+					{
+						// set it to be stop (and add to table)
 						((Block) section).getSignalDown().setStop();
 						signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalDown().getSigId()) + " ";
 
 					}
 
-					else //if it doesn't have a down signal (next to a point)
+					else
+					// if it doesn't have a down signal (next to a point)
 					{
-						//if the current section in the loop is the destination signal's owner
+						// if the current section in the loop is the destination
+						// signal's owner
 						if (section.equals(r.getDestOwner()))
 						{
-							//set it to be stop (and add to table)
+							// set it to be stop (and add to table)
 							((Block) r.getDestOwner().getNeighList().get(1)).getSignalDown().setStop();
 							signalsString = signalsString + "s"
 									+ Integer.toString(((Block) r.getDestOwner().getNeighList().get(1)).getSignalDown().getSigId()) + " ";
@@ -254,7 +254,7 @@ public class InterlockingTableGenerator {
 			{
 				if (section instanceof Block)
 				{
-					if (((Block)section).getSignalUp() != null)
+					if (((Block) section).getSignalUp() != null)
 					{
 						((Block) section).getSignalUp().setStop();
 						signalsString = signalsString + "s" + Integer.toString(((Block) section).getSignalUp().getSigId()) + " ";
@@ -280,10 +280,9 @@ public class InterlockingTableGenerator {
 	public String conflictSettings(Route r)
 	{
 		String conflictString = " ";
-		
-		
-		//loop through every journey in the 
-		
+
+		// loop through every journey in the
+
 		for (int journeyCounter = 0; journeyCounter < journeys.size(); journeyCounter++)
 		{
 			journey = journeys.get(journeyCounter);
@@ -298,11 +297,13 @@ public class InterlockingTableGenerator {
 					Route compareRoute = journey.get(routeCounter);
 					int pathCounter = 0;
 
-					// loop through the compareRoute's path until conflict is found
+					// loop through the compareRoute's path until conflict is
+					// found
 					// with the current section of the original route
 					while (!conflictFound && pathCounter < compareRoute.getPath().size())
 					{
-						// loop through every section in the path for the current
+						// loop through every section in the path for the
+						// current
 						// route(current route decided in createTable method)
 						for (Section section : r.getPath())
 						{
@@ -323,9 +324,10 @@ public class InterlockingTableGenerator {
 
 				// if journey is the current route and not the last element,
 				// ignore the route
-				else //if (routeCounter < journey.get(routeCounter).getPath().size() - 1)
+				else
+				// if (routeCounter < journey.get(routeCounter).getPath().size()
+				// - 1)
 				{
-					
 
 				}
 

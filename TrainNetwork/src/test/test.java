@@ -35,10 +35,10 @@ public class test {
 			System.out.println(reader.getStorePoint().get(l).pointString() + "\n");
 
 		}
-				
+		
+		CreateNetwork.populateSignalMap(reader);
 		CreateNetwork.addEdges(reader);
 		CreateNetwork.findPairs(reader);
-		CreateNetwork.populateSignalMap(reader);
 		
 //		Route r1 = new Route(1, 1, 6);
 //		Route r2 = new Route(2, 6, 7);

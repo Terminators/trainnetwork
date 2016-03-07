@@ -1,5 +1,7 @@
 package NetworkRepresentation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import net.sf.oval.ConstraintViolation;
@@ -35,10 +37,19 @@ public class ValidateNetwork {
 		}
 	}
 	
-	public static void validateNetwork()
+	public static void validateSignals(HashMap<Integer, Block> signalMap) throws InvalidNetworkException
 	{
-		
-	}
-	
+		for (int i = 0; i < signalMap.keySet().size() - 1; i++)
+		{
+			List<Integer> keyList = new ArrayList<Integer>();
+			keyList.addAll(signalMap.keySet());
+			
+			//if there are two of the same signal ids, then throw an exception
+			if (keyList.get(i) == keyList.get(i + 1))
+			{
+				throw new InvalidNetworkException("Cannot have two of the same signal in the network");
+			}
 
+		}
+	}
 }
