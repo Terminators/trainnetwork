@@ -30,7 +30,7 @@ public class Point extends Section {
 
 	boolean facingUp;
 
-	private static final HashMap<String, Point> Point = new HashMap<String, Point>();
+	private static final HashMap<String, Point> PointMap = new HashMap<String, Point>();
 
 	private Point(String pId, String neighbour1, String neighbour2, String neighbour3) throws InvalidNetworkException
 	{
@@ -51,18 +51,18 @@ public class Point extends Section {
 	public static Point getInstance(String pId, String neighbour1, String neighbour2, String neighbour3) throws InvalidNetworkException
 	{
 		final String key = pId;
-		if (!Point.containsKey(key))
+		if (!PointMap.containsKey(key))
 		{
-			Point.put(key, new Point(pId, neighbour1, neighbour2, neighbour3));
+			PointMap.put(key, new Point(pId, neighbour1, neighbour2, neighbour3));
 
 		}
-		return Point.get(key);
+		return PointMap.get(key);
 
 	}
 
 	public String pointString()
 	{
-		return "POINT:" + pId + " \n neighbour1: " + neighbour1 + " \n neighbour2: " + neighbour2 + " \n neighbour3: " + neighbour3;
+		return "POINT:" + pId + " \n neighbour1: " + neighbour1 + " \n neighbour2: " + neighbour2 + " \n neighbour3: " + neighbour3 + " \n Setting: " + settingToString();
 
 	}
 
@@ -160,6 +160,15 @@ public class Point extends Section {
 	public String toString()
 	{
 		return "p" + pId;
+	}
+	
+	public String settingToString()
+	{
+		if (plus)
+		{
+			return "plus";
+		}
+		else return "minus";
 	}
 
 }

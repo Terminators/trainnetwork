@@ -21,14 +21,13 @@ public class test {
 
 		String filePath = new File("").getAbsolutePath();
 		
-		reader.readFile((filePath + "/src/ExtendedNW.txt"));
+		reader.readFile((filePath + "/src/testNetworkFile.txt"));
 
 		for (int i = 0; i < reader.getStoreBlock().size(); i++) {
 			
 			System.out.println(reader.getStoreBlock().get(i).blockString() + "\n");
 
 		}
-		
 		
 		for (int l = 0; l < reader.getStorePoint().size(); l++) {
 			
@@ -82,28 +81,28 @@ public class test {
 		
 		//Extended
 		
-		Route r1 = new Route(1, 1, 8);
-		Route r2 = new Route(2, 1, 10);
-		Route r3 = new Route(3, 8, 11);
-		Route r4 = new Route(4, 10, 11);
-		Route r5 = new Route(5, 1, 4);
-		Route r6 = new Route(6, 1, 6);
-		Route r7 = new Route(7, 4, 11);
-		Route r8 = new Route(8, 6, 11);
-		Route r9 = new Route(9, 12, 9);
-		Route r10 = new Route(10, 12, 7);
-		Route r11 = new Route(11, 9, 2);
-		Route r12 = new Route(12, 7, 2);
-		Route r13 = new Route(13, 12, 5);
-		Route r14 = new Route(14, 12, 3);
-		Route r15 = new Route(15, 5, 2);
-		Route r16 = new Route(16, 3, 2);
-		Route r17 = new Route(17, 4, 6);
-		Route r18 = new Route(18, 5, 3);
-		Route r19 = new Route(19, 8, 10);
-		Route r20 = new Route(20, 9, 7);
+//		Route r1 = new Route(1, 1, 8);
+//		Route r2 = new Route(2, 1, 10);
+//		Route r3 = new Route(3, 8, 11);
+//		Route r4 = new Route(4, 10, 11);
+//		Route r5 = new Route(5, 1, 4);
+//		Route r6 = new Route(6, 1, 6);
+//		Route r7 = new Route(7, 4, 11);
+//		Route r8 = new Route(8, 6, 11);
+//		Route r9 = new Route(9, 12, 9);
+//		Route r10 = new Route(10, 12, 7);
+//		Route r11 = new Route(11, 9, 2);
+//		Route r12 = new Route(12, 7, 2);
+//		Route r13 = new Route(13, 12, 5);
+//		Route r14 = new Route(14, 12, 3);
+//		Route r15 = new Route(15, 5, 2);
+//		Route r16 = new Route(16, 3, 2);
+//		Route r17 = new Route(17, 4, 6);
+//		Route r18 = new Route(18, 5, 3);
+//		Route r19 = new Route(19, 8, 10);
+//		Route r20 = new Route(20, 9, 7);
 		
-		List<Route> j1 = new ArrayList<Route>();
+//		List<Route> j1 = new ArrayList<Route>();
 		
 //		//Jack
 //		
@@ -126,9 +125,9 @@ public class test {
 		
 		//j1.add(errorRoute1);
 		
-		j1.add(r1);
+//		j1.add(r1);
 //		j1.add(r2);
-		j1.add(r3);
+//		j1.add(r3);
 //		j1.add(r4);
 //		j1.add(r5);
 //		j1.add(r6);
@@ -166,6 +165,8 @@ public class test {
 //		
 		InterlockingTableGenerator t = new InterlockingTableGenerator();
 		t.printTable();
+		
+		System.out.println("");
 		
 		for (int i = 0; i < reader.getStoreBlock().size(); i++) {
 			

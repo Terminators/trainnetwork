@@ -76,25 +76,21 @@ p1
 b2
 b3
 b4
-plus
 
 Point
 p2 
 b3
 b4
 b5
-plus
 
 Point
 p3 
 b5
 b6
 b7
-plus
 
 Point
 p4 
 b6
 b7
 b8
-plus

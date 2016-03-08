@@ -52,11 +52,9 @@ p1
 b2
 b3
 b4
-plus
 
 Point
 p2 
 b3
 b4
 b5
-plus

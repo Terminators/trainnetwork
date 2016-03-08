@@ -33,7 +33,7 @@ public class Block extends Section {
 	private Point closestPointUp;
 	private Point closestPointDown;
 
-	private static final HashMap<String, Block> Blocks = new HashMap<String, Block>();
+	private static final HashMap<String, Block> BlockMap = new HashMap<String, Block>();
 
 	private Block(@NotNull @MatchPattern(pattern = { "[bB]\\d" }) String bId, String leftNeighbour, String rightNeighbour, Boolean plus,
 			@NotNull @MatchPattern(pattern = { "[sS]\\d" }) String signalDown,
@@ -81,12 +81,12 @@ public class Block extends Section {
 			String signalTwo) throws InvalidNetworkException
 	{
 		final String key = name;
-		if (!Blocks.containsKey(key))
+		if (!BlockMap.containsKey(key))
 		{
-			Blocks.put(key, new Block(name, leftNeighbour, rightNeighbour, plus, signalOne, signalTwo));
+			BlockMap.put(key, new Block(name, leftNeighbour, rightNeighbour, plus, signalOne, signalTwo));
 
 		}
-		return Blocks.get(key);
+		return BlockMap.get(key);
 
 	}
 
@@ -223,5 +223,18 @@ public class Block extends Section {
 
 		else
 			return s.state();
+	}
+	
+	public void setSignalsClear()
+	{
+		if (signalUp != null)
+		{
+			signalUp.setClear();
+		}
+		
+		if (signalDown != null)
+		{
+			signalDown.setClear();
+		}
 	}
 }

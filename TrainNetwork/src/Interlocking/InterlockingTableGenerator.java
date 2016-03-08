@@ -117,6 +117,7 @@ public class InterlockingTableGenerator {
 		String pointsString = "";
 		if (r.hasPoint())
 		{
+			r.getPoint().setPlus();
 			// set the point's settings
 			if (r.getPoint().pointFacingRouteDirection(r))
 			{
@@ -222,6 +223,7 @@ public class InterlockingTableGenerator {
 				// if the current section in the path is a block
 				if (section instanceof Block)
 				{
+					((Block) section).setSignalsClear();
 					// if the current block has a down signal
 					if (((Block) section).getSignalDown() != null)
 					{
@@ -254,6 +256,7 @@ public class InterlockingTableGenerator {
 			{
 				if (section instanceof Block)
 				{
+					((Block) section).setSignalsClear();
 					if (((Block) section).getSignalUp() != null)
 					{
 						((Block) section).getSignalUp().setStop();
